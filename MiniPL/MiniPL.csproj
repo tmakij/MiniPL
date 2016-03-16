@@ -22,15 +22,18 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>
+    </DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -43,8 +46,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CharToString.cs" />
+    <Compile Include="LexerException.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scanner.cs" />
+    <Compile Include="ScannerStates\Base.cs" />
+    <Compile Include="ScannerStates\Colon.cs" />
+    <Compile Include="ScannerStates\CommentEnd.cs" />
+    <Compile Include="ScannerStates\IntegerLiteral.cs" />
+    <Compile Include="ScannerStates\StarOperator.cs" />
+    <Compile Include="ScannerStates\Commment.cs" />
+    <Compile Include="ScannerStates\Identifier.cs" />
+    <Compile Include="ScannerStates\IScannerState.cs" />
+    <Compile Include="ScannerStates\ScannerState.cs" />
+    <Compile Include="ScannerStates\StateStorage.cs" />
+    <Compile Include="ScannerStates\VariableA.cs" />
+    <Compile Include="ScannerStates\VariableR.cs" />
+    <Compile Include="ScannerStates\VariableV.cs" />
+    <Compile Include="SourceStream.cs" />
+    <Compile Include="Token.cs" />
+    <Compile Include="TokenConstruction.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
