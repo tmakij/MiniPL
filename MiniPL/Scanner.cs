@@ -19,7 +19,7 @@ namespace MiniPL
         public void GenerateTokens()
         {
             TokenConstruction constr = new TokenConstruction();
-            IScannerState currentState = scannerStates.Get(ScannerState.Base);
+            IScannerState currentState = scannerStates.Base;
             while (true)
             {
                 source.MoveNext();
@@ -28,8 +28,7 @@ namespace MiniPL
                     break;
                 }
                 char curr = source.Current;
-                ScannerState newState = currentState.Read(constr, curr, scannerStates);
-                currentState = scannerStates.Get(newState);
+                currentState = currentState.Read(constr, curr, scannerStates);
             }
         }
     }

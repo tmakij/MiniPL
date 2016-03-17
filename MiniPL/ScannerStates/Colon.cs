@@ -2,16 +2,15 @@
 {
     public sealed class Colon : IScannerState
     {
-        ScannerState IScannerState.Read(TokenConstruction Current, char Read, StateStorage States)
+        IScannerState IScannerState.Read(TokenConstruction Current, char Read, StateStorage States)
         {
             if (Read == '=')
             {
-                Current.Append(Read);
-                Current.End();
-                return ScannerState.Base;
+                Current.End(TokenID.Assigment);
+                return States.Base;
             }
-            Current.End();
-            return States.Get(ScannerState.Base).Read(Current, Read, States);
+            Current.End(TokenID.Colon);
+            return States.Base.Read(Current, Read, States);
         }
     }
 }

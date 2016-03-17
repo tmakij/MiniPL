@@ -2,6 +2,6 @@
 {
     public interface IScannerState
     {
-        ScannerState Read(TokenConstruction Current, char Read, StateStorage States);
+        IScannerState Read(TokenConstruction Current, char Read, StateStorage States);
     }
 }

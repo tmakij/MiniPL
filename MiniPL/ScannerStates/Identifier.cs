@@ -7,19 +7,21 @@
             return char.IsLetterOrDigit(Character) || Character == '_';
         }
 
-        ScannerState IScannerState.Read(TokenConstruction Current, char Read, StateStorage States)
+        IScannerState IScannerState.Read(TokenConstruction Current, char Read, StateStorage States)
         {
-            if (char.IsWhiteSpace(Read))
+            /*if (char.IsWhiteSpace(Read))
             {
                 Current.End();
-                return ScannerState.Base;
-            }
+                return States.Base;
+            }*/
             if (IsAcceptableIdentifier(Read))
             {
                 Current.Append(Read);
-                return ScannerState.Identifier;
+                return States.Identifier;
             }
-            throw new LexerException("Invalid indentifier character \"" + CharToString.Convert(Read) + "\", expected [A-Za-z0-9_]");
+            Current.End();
+            return States.Base.Read(Current, Read, States);
+            //throw new LexerException("Invalid indentifier character \"" + CharToString.Convert(Read) + "\", expected [A-Za-z0-9_]");
         }
     }
 }

@@ -1,13 +1,13 @@
 ﻿namespace MiniPL.ScannerStates
 {
-    public sealed class VariableV : IScannerState
+    public sealed class IntegerI : IScannerState
     {
         IScannerState IScannerState.Read(TokenConstruction Current, char Read, StateStorage States)
         {
-            if (Read == 'a')
+            if (Read == 'n')
             {
                 Current.Append(Read);
-                return States.VariableA;
+                return States.IntegerN;
             }
             return States.Identifier.Read(Current, Read, States);
         }

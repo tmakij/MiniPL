@@ -1,13 +1,13 @@
 ﻿namespace MiniPL.ScannerStates
 {
-    public sealed class VariableV : IScannerState
+    public sealed class PrintT : IScannerState
     {
         IScannerState IScannerState.Read(TokenConstruction Current, char Read, StateStorage States)
         {
-            if (Read == 'a')
+            if (char.IsWhiteSpace(Read))
             {
-                Current.Append(Read);
-                return States.VariableA;
+                Current.End(TokenID.PrintProcedure);
+                return States.Base;
             }
             return States.Identifier.Read(Current, Read, States);
         }

@@ -15,11 +15,60 @@ namespace MiniPL
 
         public void End()
         {
-            string res = curr.ToString();
-            curr.Clear();
-            Token t = new Token(res);
+            End(TokenID.Identifier);
+        }
+
+        public void End(TokenID ID)
+        {
+            string res = TokenText(ID);
+            Token t = new Token(res, ID);
             tokens.Add(t);
-            System.Console.WriteLine("Read token: \"" + t  + "\"");
+            string dbg;
+            if (ID == TokenID.IntegerLiteral || ID == TokenID.Identifier)
+            {
+                dbg = ID +": " + res;
+            }
+            else
+            {
+                dbg = ID.ToString();
+            }
+            System.Console.WriteLine("Read token: " + dbg);
+        }
+
+        private string TokenText(TokenID ID)
+        {
+            switch (ID)
+            {
+                case TokenID.Variable:
+                    curr.Clear();
+                    return "var";
+                case TokenID.Addition:
+                    return "+";
+                case TokenID.Multiplication:
+                    return "*";
+                case TokenID.Assigment:
+                    return ":=";
+                case TokenID.Colon:
+                    return ":";
+                case TokenID.ClosureClose:
+                    return ")";
+                case TokenID.ClosureOpen:
+                    return "(";
+                case TokenID.SemiColon:
+                    return ";";
+                case TokenID.IntegerType:
+                    curr.Clear();
+                    return "int";
+                case TokenID.PrintProcedure:
+                    curr.Clear();
+                    return "PrintProcedure";
+                case TokenID.IntegerLiteral:
+                case TokenID.Identifier:
+                default:
+                    string text = curr.ToString();
+                    curr.Clear();
+                    return text;
+            }
         }
     }
 }

@@ -2,49 +2,31 @@
 {
     public sealed class StateStorage
     {
-        public Base Base { get; }
-        public StarOperator StarOperator { get; }
-        public Commment Commment { get; }
-        public CommentEnd CommentEnd { get; }
-        public Identifier Identifier { get; }
-        public VariableV VariableV { get; }
-        public VariableA VariableA { get; }
-        public VariableR VariableR { get; }
-        public Colon Colon { get; }
-        public IntegerLiteral IntegerLiteral { get; }
-
-        private readonly IScannerState[] states;
+        public IScannerState Base { get; } = new Base();
+        public IScannerState CommentStart { get; } = new CommentStart();
+        public IScannerState Comment { get; } = new Comment();
+        public IScannerState CommentEnd { get; } = new CommentEnd();
+        public IScannerState Identifier { get; } = new Identifier();
+        public IScannerState VariableV { get; } = new VariableV();
+        public IScannerState VariableA { get; } = new VariableA();
+        public IScannerState VariableR { get; } = new VariableR();
+        public IScannerState Colon { get; } = new Colon();
+        public IScannerState IntegerLiteral { get; } = new IntegerLiteral();
+        public IScannerState IntegerI { get; } = new IntegerI();
+        public IScannerState IntegerN { get; } = new IntegerN();
+        public IScannerState IntegerT { get; } = new IntegerT();
+        public IScannerState PrintP { get; }
+        public IScannerState PrintR { get; }
+        public IScannerState PrintI { get; }
+        public IScannerState PrintN { get; }
+        public IScannerState PrintT { get; } = new PrintT();
 
         public StateStorage()
         {
-            states = new IScannerState[]
-            {
-                new Base(),
-                new StarOperator(),
-                new Commment(),
-                new CommentEnd(),
-                new Identifier(),
-                new VariableV(),
-                new VariableA(),
-                new VariableR(),
-                new Colon(),
-                new IntegerLiteral()
-            };
-            Base = new Base();
-            StarOperator = new StarOperator();
-            Commment = new Commment();
-            CommentEnd = new CommentEnd();
-            Identifier = new Identifier();
-            VariableV = new VariableV();
-            VariableA = new VariableA();
-            VariableR = new VariableR();
-            Colon = new Colon();
-            IntegerLiteral = new IntegerLiteral();
-        }
-
-        public IScannerState Get(ScannerState State)
-        {
-            return states[(int)State];
+            PrintN = new PrintX('t', PrintT);
+            PrintI = new PrintX('n', PrintN);
+            PrintR = new PrintX('i', PrintI);
+            PrintP = new PrintX('r', PrintR);
         }
     }
 }

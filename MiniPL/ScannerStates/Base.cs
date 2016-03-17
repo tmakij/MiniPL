@@ -2,7 +2,7 @@
 {
     public sealed class Base : IScannerState
     {
-        ScannerState IScannerState.Read(TokenConstruction Current, char Read, StateStorage States)
+        IScannerState IScannerState.Read(TokenConstruction Current, char Read, StateStorage States)
         {
             if (char.IsLetter(Read))
             {
@@ -10,47 +10,71 @@
                 switch (Read)
                 {
                     case 'f':
-                        return ScannerState.Identifier;
+                        return States.Identifier;
                     case 'i':
                         /*int, in*/
-                        return ScannerState.Identifier;
+                        return States.IntegerI;
                     case 'e':
-                        return ScannerState.Identifier;
+                        return States.Identifier;
                     case 'p':
-                        return ScannerState.Identifier;
+                        return States.PrintP;
                     case 'd':
-                        return ScannerState.Identifier;
+                        return States.Identifier;
                     case 'r':
-                        return ScannerState.Identifier;
+                        return States.Identifier;
                     case 's':
-                        return ScannerState.Identifier;
+                        return States.Identifier;
                     case 'b':
-                        return ScannerState.Identifier;
+                        return States.Identifier;
                     case 'a':
-                        return ScannerState.Identifier;
+                        return States.Identifier;
                     case 'v':
-                        return ScannerState.VariableV;
+                        return States.VariableV;
                     default:
-                        return ScannerState.Identifier;
+                        return States.Identifier;
                 }
             }
             if (char.IsNumber(Read))
             {
                 Current.Append(Read);
-                return ScannerState.IntergerLiteral;
+                return States.IntegerLiteral;
             }
-            if (Read == '*')
+            if (Read == '/')
             {
-                return ScannerState.StarOperator;
+                return States.CommentStart;
             }
             if (Read == ':')
             {
-                Current.Append(Read);
-                return ScannerState.Colon;
+                return States.Colon;
+            }
+            if (Read == '+')
+            {
+                Current.End(TokenID.Addition);
+                return this;
+            }
+            if (Read == '*')
+            {
+                Current.End(TokenID.Multiplication);
+                return this;
+            }
+            if (Read == ';')
+            {
+                Current.End(TokenID.SemiColon);
+                return this;
+            }
+            if (Read == '(')
+            {
+                Current.End(TokenID.ClosureOpen);
+                return this;
+            }
+            if (Read == ')')
+            {
+                Current.End(TokenID.ClosureClose);
+                return this;
             }
             if (char.IsWhiteSpace(Read))
             {
-                return ScannerState.Base;
+                return this;
             }
             throw new LexerException("Invalid character " + Read);
         }

@@ -48,18 +48,23 @@
   <ItemGroup>
     <Compile Include="CharToString.cs" />
     <Compile Include="LexerException.cs" />
+    <Compile Include="Parser.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scanner.cs" />
     <Compile Include="ScannerStates\Base.cs" />
     <Compile Include="ScannerStates\Colon.cs" />
     <Compile Include="ScannerStates\CommentEnd.cs" />
+    <Compile Include="ScannerStates\IntegerI.cs" />
     <Compile Include="ScannerStates\IntegerLiteral.cs" />
-    <Compile Include="ScannerStates\StarOperator.cs" />
-    <Compile Include="ScannerStates\Commment.cs" />
+    <Compile Include="ScannerStates\CommentStart.cs" />
+    <Compile Include="ScannerStates\Comment.cs" />
     <Compile Include="ScannerStates\Identifier.cs" />
+    <Compile Include="ScannerStates\IntegerN.cs" />
+    <Compile Include="ScannerStates\IntegerT.cs" />
     <Compile Include="ScannerStates\IScannerState.cs" />
-    <Compile Include="ScannerStates\ScannerState.cs" />
+    <Compile Include="ScannerStates\PrintX.cs" />
+    <Compile Include="ScannerStates\PrintT.cs" />
     <Compile Include="ScannerStates\StateStorage.cs" />
     <Compile Include="ScannerStates\VariableA.cs" />
     <Compile Include="ScannerStates\VariableR.cs" />
@@ -67,9 +72,13 @@
     <Compile Include="SourceStream.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="TokenConstruction.cs" />
+    <Compile Include="Tokens\Identifier.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Parser\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

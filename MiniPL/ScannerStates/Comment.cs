@@ -1,12 +1,12 @@
 ﻿namespace MiniPL.ScannerStates
 {
-    public sealed class CommentEnd : IScannerState
+    public sealed class Comment : IScannerState
     {
         IScannerState IScannerState.Read(TokenConstruction Current, char Read, StateStorage States)
         {
-            if (Read == '/')
+            if (Read == '*')
             {
-                return States.Base;
+                return States.CommentEnd;
             }
             return States.Comment;
         }
