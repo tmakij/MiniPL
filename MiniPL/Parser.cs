@@ -21,137 +21,214 @@ namespace MiniPL
             Program();
         }
 
-        private void Program()
+        private SyntaxNode Program()
         {
-            Statements();
+            SyntaxNode root = Statements();
+            Print(1, root);
+            return root;
         }
 
-        private void Statements()
+        private void Print(int Level, SyntaxNode Parent)
         {
-            Statement();
-            Require(Symbol.SemiColon);
-
-            while (position != tokens.Count && Statement())
+            System.Console.WriteLine("Level " + Level + ": " +Parent.Symbol);
+            foreach (SyntaxNode node in Parent.Children)
             {
-                Require(Symbol.SemiColon);
+                Print(Level + 1,node);
             }
         }
 
-        private bool Statement()
+        private SyntaxNode Statements()
         {
-            if (Accept(Symbol.Variable))
+            SyntaxNode node = MakeNode(Symbol.EndOfInput);
+
+            SyntaxNode requiredStatement = Statement();
+            if (requiredStatement == null)
             {
-                if (!VariableIdentifier())
+                throw new SyntaxException("Program requires at least one statement");
+            }
+            node.Add(requiredStatement);
+            Require(Symbol.SemiColon);
+
+            while (symbol != Symbol.EndOfInput)
+            {
+                node.Add(Statement());
+                Require(Symbol.SemiColon);
+            }
+
+            return node;
+        }
+
+        private SyntaxNode Statement()
+        {
+            SyntaxNode varAssigment = ReadNode(Symbol.Variable);
+            if (varAssigment != null)
+            {
+                SyntaxNode identifierToAssigment = VariableIdentifier();
+                if (identifierToAssigment == null)
                 {
                     throw new SyntaxException("Expected identifier, but " + symbol + " was found");
                 }
+                varAssigment.Add(identifierToAssigment);
                 Require(Symbol.Colon);
-                if (!Type())
+                SyntaxNode type = Type();
+                if (type == null)
                 {
                     throw new SyntaxException("Expected type, but " + symbol + " was found");
                 }
-                if (Accept(Symbol.Assigment))
+                varAssigment.Add(type);
+
+
+                while (true)
                 {
-                    if (!Expression())
+                    SyntaxNode multiAssigment = ReadNode(Symbol.Assigment);
+                    if (multiAssigment == null)
+                    {
+                        break;
+                    }
+                    varAssigment.Add(multiAssigment);
+                    SyntaxNode expr = Expression();
+                    if (expr == null)
                     {
                         throw new SyntaxException("Expected expression, but " + symbol + " was found");
                     }
+                    varAssigment.Add(expr);
                 }
-                return true;
+                return varAssigment;
             }
-            if (VariableIdentifier())
+
+            SyntaxNode varIdent = VariableIdentifier();
+            if (varIdent != null)
             {
-                Require(Symbol.Assigment);
-                if (!Expression())
+                SyntaxNode assigment = ReadNode(Symbol.Assigment);
+                if (assigment == null)
+                {
+                    throw new SyntaxException(Symbol.Assigment, symbol);
+                }
+                varIdent.Add(assigment);
+
+                SyntaxNode expr = Expression();
+                if (expr == null)
                 {
                     throw new SyntaxException("Expected expression, but " + symbol + " was found");
                 }
-                return true;
+                varIdent.Add(expr);
+
+                return varIdent;
             }
-            if (Accept(Symbol.PrintProcedure))
+
+            SyntaxNode printProcedre = ReadNode(Symbol.PrintProcedure);
+            if (printProcedre != null)
             {
-                if (!Expression())
+                SyntaxNode expr = Expression();
+                if (expr == null)
                 {
                     throw new SyntaxException("Expected Expression, but found " + symbol);
                 }
-                return true;
+                printProcedre.Add(expr);
+                return printProcedre;
             }
-            return false;
+            return null;
         }
 
-        private bool Expression()
+        private SyntaxNode Expression()
         {
-            if (UnaryOperator())
+            SyntaxNode unary = UnaryOperator();
+            if (unary != null)
             {
-                if (!Operator())
+                SyntaxNode opr = Operator();
+                if (opr == null)
                 {
                     throw new SyntaxException("Expected operator, but " + symbol + " was found");
                 }
-                return true;
+                unary.Add(opr);
+                return opr;
             }
-            if (Operand())
+            SyntaxNode firstOperand = Operand();
+            if (firstOperand != null)
             {
-                if (Operator())
+                SyntaxNode opr = Operator();
+                if (opr != null)
                 {
-                    if (!Operand())
+                    firstOperand.Add(opr);
+                    SyntaxNode secondOperand = Operand();
+                    if (secondOperand == null)
                     {
                         throw new SyntaxException("Expected operand, but " + symbol + " was found");
                     }
+                    firstOperand.Add(secondOperand);
                 }
-                return true;
+                return firstOperand;
             }
-            return false;
+            return null;
         }
 
-        private bool Operator()
+        private SyntaxNode Operator()
         {
-            return Accept(Symbol.Addition) || Accept(Symbol.Multiplication);
-        }
-
-        private bool UnaryOperator()
-        {
-            return Accept(Symbol.Addition);
-        }
-
-        private bool Operand()
-        {
-            if (VariableIdentifier())
+            if (Accept(Symbol.Addition))
             {
-                return true;
+                return MakeNode(Symbol.Addition);
             }
-            if (Accept(Symbol.IntegerLiteral))
+            if (Accept(Symbol.Multiplication))
             {
-                return true;
+                return MakeNode(Symbol.Multiplication);
+            }
+            return null;
+        }
+
+        private SyntaxNode UnaryOperator()
+        {
+            if (Accept(Symbol.Addition))
+            {
+                MakeNode(Symbol.Addition);
+            }
+            return null;
+        }
+
+        private SyntaxNode Operand()
+        {
+            SyntaxNode varNode = VariableIdentifier();
+            if (varNode != null)
+            {
+                return varNode;
+            }
+            SyntaxNode literal = ReadNode(Symbol.IntegerLiteral);
+            if (literal != null)
+            {
+                return literal;
             }
             if (Accept(Symbol.ClosureOpen))
             {
-                if (Expression())
+                SyntaxNode expr = Expression();
+                if (expr == null)
                 {
-                    Require(Symbol.ClosureClose);
-                    return true;
+                    throw new SyntaxException("Expected expression, found " + symbol);
                 }
+                Require(Symbol.ClosureClose);
+                return expr;
+
             }
-            return false;
+            return null;
         }
 
-        private bool VariableIdentifier()
+        private SyntaxNode VariableIdentifier()
         {
-            return Accept(Symbol.Identifier);
+            if (Accept(Symbol.Identifier))
+            {
+                return MakeNode(Symbol.Identifier);
+            }
+            return null;
         }
 
-        private bool Type()
+        private SyntaxNode Type()
         {
-            return Accept(Symbol.IntegerType);
+            return ReadNode(Symbol.IntegerType);
         }
 
         private void NextToken()
         {
             position++;
-            if (position != tokens.Count)
-            {
-                curr = tokens[position];
-                symbol = curr.Symbol;
-            }
+            curr = tokens[position];
+            symbol = curr.Symbol;
         }
 
         private bool Accept(Symbol Accepted)
@@ -169,9 +246,24 @@ namespace MiniPL
         {
             if (!Accept(Expected))
             {
-                throw new SyntaxException("Expected "+ Expected + ", but " + symbol + " was found");
+                throw new SyntaxException("Expected " + Expected + ", but " + symbol + " was found");
             }
             return true;
+        }
+
+        private SyntaxNode ReadNode(Symbol Symbol)
+        {
+            if (Accept(Symbol))
+            {
+                return MakeNode(Symbol);
+            }
+            return null;
+        }
+
+        private SyntaxNode MakeNode(Symbol Symbol)
+        {
+            SyntaxNode node = new SyntaxNode(Symbol);
+            return node;
         }
     }
 }

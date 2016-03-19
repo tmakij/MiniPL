@@ -27,6 +27,7 @@ namespace MiniPL
                 char curr = source.Current;
                 currentState = currentState.Read(constr, curr, scannerStates);
             }
+            constr.End(Symbol.EndOfInput);
             return constr.Tokens;
         }
     }

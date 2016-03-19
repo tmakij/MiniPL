@@ -72,6 +72,7 @@
     <Compile Include="SourceStream.cs" />
     <Compile Include="Symbol.cs" />
     <Compile Include="SyntaxException.cs" />
+    <Compile Include="SyntaxNode.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="TokenConstruction.cs" />
     <Compile Include="Tokens\Identifier.cs" />

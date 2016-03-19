@@ -57,6 +57,8 @@ namespace MiniPL
                     return "(";
                 case Symbol.SemiColon:
                     return ";";
+                case Symbol.EndOfInput:
+                    return "EndOfInput";
                 case Symbol.IntegerType:
                     curr.Clear();
                     return "int";

@@ -14,19 +14,20 @@ namespace MiniPL
                 IList<Token> tokens = scanner.GenerateTokens();
                 Parser parser = new Parser(tokens);
                 parser.Parse();
-                Console.ReadKey();
+                Console.WriteLine("Valid program!");
+                Console.ReadKey(false);
                 return 0;
             }
             catch (LexerException ex)
             {
                 Console.WriteLine("LexicalError: " + ex.Message);
-                Console.ReadKey();
+                Console.ReadKey(false);
                 return -1;
             }
             catch (SyntaxException ex)
             {
                 Console.WriteLine("SyntaxError: " + ex.Message);
-                Console.ReadKey();
+                Console.ReadKey(false);
                 return -1;
             }
         }

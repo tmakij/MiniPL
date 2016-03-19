@@ -2,6 +2,8 @@
 {
     public enum Symbol
     {
+        EndOfInput,
+
         Identifier,
         Variable,
         IntegerLiteral,
@@ -13,6 +15,8 @@
         ClosureClose,
         SemiColon,
         IntegerType,
-        PrintProcedure
+        PrintProcedure,
+
+
     }
 }
