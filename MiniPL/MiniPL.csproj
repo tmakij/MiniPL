@@ -70,6 +70,8 @@
     <Compile Include="ScannerStates\VariableR.cs" />
     <Compile Include="ScannerStates\VariableV.cs" />
     <Compile Include="SourceStream.cs" />
+    <Compile Include="Symbol.cs" />
+    <Compile Include="SyntaxException.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="TokenConstruction.cs" />
     <Compile Include="Tokens\Identifier.cs" />

@@ -6,7 +6,7 @@
         {
             if (char.IsWhiteSpace(Read))
             {
-                Current.End(TokenID.Variable);
+                Current.End(Symbol.Variable);
                 return States.Base;
             }
             return States.Identifier.Read(Current, Read, States);

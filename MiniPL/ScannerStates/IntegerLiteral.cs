@@ -9,7 +9,7 @@
                 Current.Append(Read);
                 return States.IntegerLiteral;
             }
-            Current.End(TokenID.IntegerLiteral);
+            Current.End(Symbol.IntegerLiteral);
             return States.Base.Read(Current, Read, States);
         }
     }

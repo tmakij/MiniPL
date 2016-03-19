@@ -6,10 +6,10 @@
         {
             if (Read == '=')
             {
-                Current.End(TokenID.Assigment);
+                Current.End(Symbol.Assigment);
                 return States.Base;
             }
-            Current.End(TokenID.Colon);
+            Current.End(Symbol.Colon);
             return States.Base.Read(Current, Read, States);
         }
     }

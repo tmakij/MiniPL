@@ -2,34 +2,18 @@
 {
     public sealed class Token
     {
+        public Symbol Symbol { get; }
         private readonly string text;
-        private readonly TokenID id;
 
-        public Token(string Text, TokenID Id)
+        public Token(string Text, Symbol Symbol)
         {
             text = Text;
-            id = Id;
+            this.Symbol = Symbol;
         }
 
         public override string ToString()
         {
-            return id + ": "+ text;
+            return Symbol + ": "+ text;
         }
-    }
-
-    public enum TokenID
-    {
-        Identifier,
-        Variable,
-        IntegerLiteral,
-        Colon,
-        Assigment,
-        Addition,
-        Multiplication,
-        ClosureOpen,
-        ClosureClose,
-        SemiColon,
-        IntegerType,
-        PrintProcedure
     }
 }

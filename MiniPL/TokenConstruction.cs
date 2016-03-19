@@ -5,6 +5,7 @@ namespace MiniPL
 {
     public sealed class TokenConstruction
     {
+        public IList<Token> Tokens { get { return tokens.AsReadOnly(); } }
         private readonly StringBuilder curr = new StringBuilder();
         private readonly List<Token> tokens = new List<Token>();
 
@@ -15,16 +16,16 @@ namespace MiniPL
 
         public void End()
         {
-            End(TokenID.Identifier);
+            End(Symbol.Identifier);
         }
 
-        public void End(TokenID ID)
+        public void End(Symbol ID)
         {
             string res = TokenText(ID);
             Token t = new Token(res, ID);
             tokens.Add(t);
             string dbg;
-            if (ID == TokenID.IntegerLiteral || ID == TokenID.Identifier)
+            if (ID == Symbol.IntegerLiteral || ID == Symbol.Identifier)
             {
                 dbg = ID +": " + res;
             }
@@ -35,35 +36,35 @@ namespace MiniPL
             System.Console.WriteLine("Read token: " + dbg);
         }
 
-        private string TokenText(TokenID ID)
+        private string TokenText(Symbol ID)
         {
             switch (ID)
             {
-                case TokenID.Variable:
+                case Symbol.Variable:
                     curr.Clear();
                     return "var";
-                case TokenID.Addition:
+                case Symbol.Addition:
                     return "+";
-                case TokenID.Multiplication:
+                case Symbol.Multiplication:
                     return "*";
-                case TokenID.Assigment:
+                case Symbol.Assigment:
                     return ":=";
-                case TokenID.Colon:
+                case Symbol.Colon:
                     return ":";
-                case TokenID.ClosureClose:
+                case Symbol.ClosureClose:
                     return ")";
-                case TokenID.ClosureOpen:
+                case Symbol.ClosureOpen:
                     return "(";
-                case TokenID.SemiColon:
+                case Symbol.SemiColon:
                     return ";";
-                case TokenID.IntegerType:
+                case Symbol.IntegerType:
                     curr.Clear();
                     return "int";
-                case TokenID.PrintProcedure:
+                case Symbol.PrintProcedure:
                     curr.Clear();
                     return "PrintProcedure";
-                case TokenID.IntegerLiteral:
-                case TokenID.Identifier:
+                case Symbol.IntegerLiteral:
+                case Symbol.Identifier:
                 default:
                     string text = curr.ToString();
                     curr.Clear();

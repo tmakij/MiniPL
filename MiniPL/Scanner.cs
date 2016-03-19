@@ -5,8 +5,6 @@ namespace MiniPL
 {
     public sealed class Scanner
     {
-        private readonly List<Token> tokens = new List<Token>();
-        private readonly StateStorage scannerStates = new StateStorage();
         private readonly SourceStream source;
 
         public Scanner(SourceStream Source)
@@ -14,10 +12,9 @@ namespace MiniPL
             source = Source;
         }
 
-        public IList<Token> Tokens { get { return tokens.AsReadOnly(); } }
-
-        public void GenerateTokens()
+        public IList<Token> GenerateTokens()
         {
+            StateStorage scannerStates = new StateStorage();
             TokenConstruction constr = new TokenConstruction();
             IScannerState currentState = scannerStates.Base;
             while (true)
@@ -30,6 +27,7 @@ namespace MiniPL
                 char curr = source.Current;
                 currentState = currentState.Read(constr, curr, scannerStates);
             }
+            return constr.Tokens;
         }
     }
 }

@@ -49,27 +49,27 @@
             }
             if (Read == '+')
             {
-                Current.End(TokenID.Addition);
+                Current.End(Symbol.Addition);
                 return this;
             }
             if (Read == '*')
             {
-                Current.End(TokenID.Multiplication);
+                Current.End(Symbol.Multiplication);
                 return this;
             }
             if (Read == ';')
             {
-                Current.End(TokenID.SemiColon);
+                Current.End(Symbol.SemiColon);
                 return this;
             }
             if (Read == '(')
             {
-                Current.End(TokenID.ClosureOpen);
+                Current.End(Symbol.ClosureOpen);
                 return this;
             }
             if (Read == ')')
             {
-                Current.End(TokenID.ClosureClose);
+                Current.End(Symbol.ClosureClose);
                 return this;
             }
             if (char.IsWhiteSpace(Read))
