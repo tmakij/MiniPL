@@ -12,5 +12,22 @@
             expressionOperator = Operator;
             second = Second;
         }
+
+        public void CheckIdentifiers(UsedIdentifiers Used)
+        {
+            first.CheckIdentifiers(Used);
+            second.CheckIdentifiers(Used);
+        }
+
+        public MiniPLType NodeType(IdentifierTypes Types)
+        {
+            MiniPLType firstType = first.NodeType(Types);
+            MiniPLType secondType = second.NodeType(Types);
+            if (!firstType.Equals(secondType))
+            {
+                throw new TypeMismatchException(firstType, secondType);
+            }
+            return firstType;
+        }
     }
 }

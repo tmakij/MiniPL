@@ -8,5 +8,15 @@
         {
             expression = Expression;
         }
+
+        public void CheckIdentifiers(UsedIdentifiers Used)
+        {
+            expression.CheckIdentifiers(Used);
+        }
+
+        public MiniPLType NodeType(IdentifierTypes Types)
+        {
+            return expression.NodeType(Types);
+        }
     }
 }

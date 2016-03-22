@@ -3,10 +3,21 @@
     public sealed class StringLiteralOperand : IOperand
     {
         private readonly string literal;
+        private readonly MiniPLType type;
 
-        public StringLiteralOperand(string Literal)
+        public StringLiteralOperand(string Literal, MiniPLType Type)
         {
             literal = Literal;
+            type = Type;
+        }
+
+        public void CheckIdentifiers(UsedIdentifiers Used)
+        {
+        }
+
+        public MiniPLType NodeType(IdentifierTypes Types)
+        {
+            return type;
         }
     }
 }

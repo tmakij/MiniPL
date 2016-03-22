@@ -4,12 +4,11 @@
     {
         IScannerState IScannerState.Read(TokenConstruction Current, char Read, StateStorage States)
         {
-            if (char.IsWhiteSpace(Read))
+            if (!char.IsLetterOrDigit(Read))
             {
                 Current.End(Symbol.Variable);
-                return States.Base;
             }
-            return States.Identifier.Read(Current, Read, States);
+            return States.Base.Read(Current, Read, States);
         }
     }
 }

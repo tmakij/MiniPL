@@ -1,6 +1,6 @@
 ﻿namespace MiniPL.AST
 {
-    public interface IOperand
+    public interface IOperand : IAstNode
     {
     }
 }

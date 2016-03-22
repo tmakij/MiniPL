@@ -1,7 +1,6 @@
 ﻿namespace MiniPL.AST
 {
-    public interface IExpression
+    public interface IExpression : IAstNode
     {
-
     }
 }

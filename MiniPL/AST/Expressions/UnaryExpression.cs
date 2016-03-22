@@ -10,5 +10,20 @@
             expressionOperator = Operator;
             operand = Operand;
         }
+
+        public void CheckIdentifiers(UsedIdentifiers Used)
+        {
+            operand.CheckIdentifiers(Used);
+        }
+
+        public MiniPLType NodeType(IdentifierTypes Types)
+        {
+            MiniPLType type = operand.NodeType(Types);
+            if (type.ToString() != "Integer")
+            {
+                throw new TypeMismatchException(new MiniPLType("",false), type);
+            }
+            return type;
+        }
     }
 }

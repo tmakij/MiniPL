@@ -46,30 +46,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AST\Program.cs" />
+    <Compile Include="AST\AbstractSyntaxTree.cs" />
+    <Compile Include="AST\IAstNode.cs" />
+    <Compile Include="AST\IIDentifierHolder.cs" />
     <Compile Include="AST\Statements\AssigmentStatement.cs" />
-    <Compile Include="AST\ASTSymbol.cs" />
     <Compile Include="AST\Expressions\BinaryExpression.cs" />
     <Compile Include="AST\Statements\DeclarationStatement.cs" />
     <Compile Include="AST\Operands\ExpressionOperand.cs" />
     <Compile Include="AST\Expressions\IExpression.cs" />
     <Compile Include="AST\Operands\IntegerLiteralOperand.cs" />
-    <Compile Include="AST\IntegerType.cs" />
+    <Compile Include="AST\TypeMismatchException.cs" />
     <Compile Include="AST\Operands\IOperand.cs" />
     <Compile Include="AST\Statements\IStatement.cs" />
-    <Compile Include="AST\IType.cs" />
     <Compile Include="AST\OperatorType.cs" />
     <Compile Include="AST\Operands\StringLiteralOperand.cs" />
     <Compile Include="AST\Expressions\UnaryExpression.cs" />
     <Compile Include="AST\Statements\PrintStatement.cs" />
+    <Compile Include="AST\MiniPLType.cs" />
+    <Compile Include="AST\UninitializedVariableException.cs" />
+    <Compile Include="AST\UsedIdentifiers.cs" />
     <Compile Include="AST\VariableIdentifier.cs" />
     <Compile Include="AST\Operands\VariableOperand.cs" />
+    <Compile Include="AST\IdentifierTypes.cs" />
+    <Compile Include="AST\VariableNameDefinedException.cs" />
     <Compile Include="CharToString.cs" />
     <Compile Include="LexerException.cs" />
-    <Compile Include="AST\Operand.cs" />
-    <Compile Include="AST\Operation.cs" />
     <Compile Include="Parser.cs" />
-    <Compile Include="Entry.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scanner.cs" />
     <Compile Include="ScannerStates\Base.cs" />
@@ -95,8 +98,6 @@
     <Compile Include="SyntaxNode.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="TokenConstruction.cs" />
-    <Compile Include="Tokens\Identifier.cs" />
-    <Compile Include="AST\Variable.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

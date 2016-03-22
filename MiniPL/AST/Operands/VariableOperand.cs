@@ -8,5 +8,18 @@
         {
             variable = Variable;
         }
+
+        public void CheckIdentifiers(UsedIdentifiers Used)
+        {
+            if (!Used.IsUsed(variable))
+            {
+                throw new UninitializedVariableException(variable);
+            }
+        }
+
+        public MiniPLType NodeType(IdentifierTypes Types)
+        {
+            return Types.GetIdentifierType(variable);
+        }
     }
 }

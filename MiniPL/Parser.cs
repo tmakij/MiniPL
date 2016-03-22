@@ -5,6 +5,8 @@ namespace MiniPL
 {
     public sealed class Parser
     {
+        private readonly MiniPLType stringType = new MiniPLType("String", false);
+        private readonly MiniPLType integerType = new MiniPLType("Integer", false);
         private readonly IList<Token> tokens;
         private Token curr;
         private int position;
@@ -17,19 +19,15 @@ namespace MiniPL
             NextToken();
         }
 
-        public void Parse()
+        public AbstractSyntaxTree Parse()
         {
-            Program();
+            return Program();
         }
 
-        private Program Program()
+        private AbstractSyntaxTree Program()
         {
-            IList<IStatement> root = Statements();
-            Program p = new AST.Program()
-            {
-                Statements = root
-            };
-            return p;
+            IList<IStatement> statements = Statements();
+            return new AbstractSyntaxTree(statements);
         }
 
         private IList<IStatement> Statements()
@@ -61,16 +59,16 @@ namespace MiniPL
         {
             if (Accept(Symbol.Variable))
             {
-                VariableIdentifier identifierToAssigment = VariableIdentifier();
+                VariableIdentifier identifierToAssigment = Identifier();
                 if (identifierToAssigment == null)
                 {
                     throw new SyntaxException("Expected identifier, but " + symbol + " was found");
                 }
                 Require(Symbol.Colon);
-                IType type = Type();
+                MiniPLType type = Type();
                 if (type == null)
                 {
-                    throw new SyntaxException("Expected type, but " + symbol + " was found");
+                    throw new SyntaxException("Expected type, but " + symbol + " was found" + position);
                 }
                 IExpression expr = null;
                 if (Accept(Symbol.Assigment))
@@ -84,7 +82,7 @@ namespace MiniPL
                 return new DeclarationStatement(identifierToAssigment, type, expr);
             }
 
-            VariableIdentifier varIdent = VariableIdentifier();
+            VariableIdentifier varIdent = Identifier();
             if (varIdent != null)
             {
                 Require(Symbol.Assigment);
@@ -176,7 +174,7 @@ namespace MiniPL
 
         private IOperand Operand()
         {
-            VariableIdentifier varIdent = VariableIdentifier();
+            VariableIdentifier varIdent = Identifier();
             if (varIdent != null)
             {
                 return new VariableOperand(varIdent);
@@ -186,7 +184,7 @@ namespace MiniPL
             {
                 int val = int.Parse(curr.Value);
                 NextToken();
-                return new IntegerLiteralOperand(val);
+                return new IntegerLiteralOperand(val, integerType);
             }
             if (Accept(Symbol.ClosureOpen))
             {
@@ -201,26 +199,23 @@ namespace MiniPL
             return null;
         }
 
-        private VariableIdentifier VariableIdentifier()
+        private VariableIdentifier Identifier()
         {
-            if (!Matches(Symbol.Identifier))
+            if (Matches(Symbol.Identifier))
             {
-                return null;
+                VariableIdentifier id = new VariableIdentifier(curr.Value);
+                NextToken();
+                return id;
             }
-            VariableIdentifier id = new AST.VariableIdentifier()
-            {
-                Name = curr.Value
-            };
-            NextToken();
-            return id;
+            return null;
         }
 
-        private IType Type()
+        private MiniPLType Type()
         {
             if (Matches(Symbol.IntegerType))
             {
                 NextToken();
-                return new IntegerType();
+                return integerType;
             }
             return null;
         }
