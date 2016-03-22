@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using MiniPL.AST;
 
 namespace MiniPL
 {
@@ -21,120 +22,97 @@ namespace MiniPL
             Program();
         }
 
-        private SyntaxNode Program()
+        private Program Program()
         {
-            SyntaxNode root = Statements();
-            Print(1, root);
-            return root;
-        }
-
-        private void Print(int Level, SyntaxNode Parent)
-        {
-            System.Console.WriteLine("Level " + Level + ": " +Parent.Symbol);
-            foreach (SyntaxNode node in Parent.Children)
+            IList<IStatement> root = Statements();
+            Program p = new AST.Program()
             {
-                Print(Level + 1,node);
-            }
+                Statements = root
+            };
+            return p;
         }
 
-        private SyntaxNode Statements()
+        private IList<IStatement> Statements()
         {
-            SyntaxNode node = MakeNode(Symbol.EndOfInput);
-
-            SyntaxNode requiredStatement = Statement();
+            IStatement requiredStatement = Statement();
             if (requiredStatement == null)
             {
-                throw new SyntaxException("Program requires at least one statement");
+                throw new SyntaxException("Program must do something!");
             }
-            node.Add(requiredStatement);
             Require(Symbol.SemiColon);
+            List<IStatement> statements = new List<IStatement>();
+            statements.Add(requiredStatement);
 
-            while (symbol != Symbol.EndOfInput)
+            while (!Matches(Symbol.EndOfInput))
             {
-                node.Add(Statement());
+                IStatement stm = Statement();
+                if (stm == null)
+                {
+                    throw new SyntaxException("Expected beginning of a statement, but " + symbol + " was found");
+                }
                 Require(Symbol.SemiColon);
+                statements.Add(stm);
             }
 
-            return node;
+            return statements.AsReadOnly();
         }
 
-        private SyntaxNode Statement()
+        private IStatement Statement()
         {
-            SyntaxNode varAssigment = ReadNode(Symbol.Variable);
-            if (varAssigment != null)
+            if (Accept(Symbol.Variable))
             {
-                SyntaxNode identifierToAssigment = VariableIdentifier();
+                VariableIdentifier identifierToAssigment = VariableIdentifier();
                 if (identifierToAssigment == null)
                 {
                     throw new SyntaxException("Expected identifier, but " + symbol + " was found");
                 }
-                varAssigment.Add(identifierToAssigment);
                 Require(Symbol.Colon);
-                SyntaxNode type = Type();
+                IType type = Type();
                 if (type == null)
                 {
                     throw new SyntaxException("Expected type, but " + symbol + " was found");
                 }
-                varAssigment.Add(type);
-
-
-                while (true)
+                IExpression expr = null;
+                if (Accept(Symbol.Assigment))
                 {
-                    SyntaxNode multiAssigment = ReadNode(Symbol.Assigment);
-                    if (multiAssigment == null)
-                    {
-                        break;
-                    }
-                    varAssigment.Add(multiAssigment);
-                    SyntaxNode expr = Expression();
+                    expr = Expression();
                     if (expr == null)
                     {
                         throw new SyntaxException("Expected expression, but " + symbol + " was found");
                     }
-                    varAssigment.Add(expr);
                 }
-                return varAssigment;
+                return new DeclarationStatement(identifierToAssigment, type, expr);
             }
 
-            SyntaxNode varIdent = VariableIdentifier();
+            VariableIdentifier varIdent = VariableIdentifier();
             if (varIdent != null)
             {
-                SyntaxNode assigment = ReadNode(Symbol.Assigment);
-                if (assigment == null)
-                {
-                    throw new SyntaxException(Symbol.Assigment, symbol);
-                }
-                varIdent.Add(assigment);
-
-                SyntaxNode expr = Expression();
+                Require(Symbol.Assigment);
+                IExpression expr = Expression();
                 if (expr == null)
                 {
                     throw new SyntaxException("Expected expression, but " + symbol + " was found");
                 }
-                varIdent.Add(expr);
-
-                return varIdent;
+                return new AssigmentStatement(varIdent, expr);
             }
 
-            SyntaxNode printProcedre = ReadNode(Symbol.PrintProcedure);
-            if (printProcedre != null)
+            if (Accept(Symbol.PrintProcedure))
             {
-                SyntaxNode expr = Expression();
+                IExpression expr = Expression();
                 if (expr == null)
                 {
                     throw new SyntaxException("Expected Expression, but found " + symbol);
                 }
-                printProcedre.Add(expr);
-                return printProcedre;
+                return new PrintStatement(expr);
             }
             return null;
         }
 
-        private SyntaxNode Expression()
+        private IExpression Expression()
         {
-            SyntaxNode unary = UnaryOperator();
-            if (unary != null)
+            /*if (Accept(Symbol.Addition))
             {
+                throw new System.NotImplementedException();
                 SyntaxNode opr = Operator();
                 if (opr == null)
                 {
@@ -142,22 +120,34 @@ namespace MiniPL
                 }
                 unary.Add(opr);
                 return opr;
-            }
-            SyntaxNode firstOperand = Operand();
+            }*/
+            IOperand firstOperand = Operand();
             if (firstOperand != null)
             {
-                SyntaxNode opr = Operator();
-                if (opr != null)
+                OperatorType? opr = ReadOperator();
+                if (!opr.HasValue)
                 {
-                    firstOperand.Add(opr);
-                    SyntaxNode secondOperand = Operand();
-                    if (secondOperand == null)
-                    {
-                        throw new SyntaxException("Expected operand, but " + symbol + " was found");
-                    }
-                    firstOperand.Add(secondOperand);
+                    return new UnaryExpression(OperatorType.Addition, firstOperand);
                 }
-                return firstOperand;
+                IOperand secondOperand = Operand();
+                if (secondOperand == null)
+                {
+                    throw new SyntaxException("Expected operand, but " + symbol + " was found");
+                }
+                return new BinaryExpression(firstOperand, opr.Value, secondOperand);
+            }
+            return null;
+        }
+
+        private OperatorType? ReadOperator()
+        {
+            if (Accept(Symbol.Addition))
+            {
+                return OperatorType.Addition;
+            }
+            if (Accept(Symbol.Multiplication))
+            {
+                return OperatorType.Multiplication;
             }
             return null;
         }
@@ -175,53 +165,64 @@ namespace MiniPL
             return null;
         }
 
-        private SyntaxNode UnaryOperator()
+        private OperatorType UnaryOperator()
         {
             if (Accept(Symbol.Addition))
             {
-                MakeNode(Symbol.Addition);
+                return OperatorType.Addition;
             }
-            return null;
+            return OperatorType.Addition;
         }
 
-        private SyntaxNode Operand()
+        private IOperand Operand()
         {
-            SyntaxNode varNode = VariableIdentifier();
-            if (varNode != null)
+            VariableIdentifier varIdent = VariableIdentifier();
+            if (varIdent != null)
             {
-                return varNode;
+                return new VariableOperand(varIdent);
             }
-            SyntaxNode literal = ReadNode(Symbol.IntegerLiteral);
-            if (literal != null)
+
+            if (Matches(Symbol.IntegerLiteral))
             {
-                return literal;
+                int val = int.Parse(curr.Value);
+                NextToken();
+                return new IntegerLiteralOperand(val);
             }
             if (Accept(Symbol.ClosureOpen))
             {
-                SyntaxNode expr = Expression();
+                IExpression expr = Expression();
                 if (expr == null)
                 {
                     throw new SyntaxException("Expected expression, found " + symbol);
                 }
                 Require(Symbol.ClosureClose);
-                return expr;
-
+                return new ExpressionOperand(expr);
             }
             return null;
         }
 
-        private SyntaxNode VariableIdentifier()
+        private VariableIdentifier VariableIdentifier()
         {
-            if (Accept(Symbol.Identifier))
+            if (!Matches(Symbol.Identifier))
             {
-                return MakeNode(Symbol.Identifier);
+                return null;
             }
-            return null;
+            VariableIdentifier id = new AST.VariableIdentifier()
+            {
+                Name = curr.Value
+            };
+            NextToken();
+            return id;
         }
 
-        private SyntaxNode Type()
+        private IType Type()
         {
-            return ReadNode(Symbol.IntegerType);
+            if (Matches(Symbol.IntegerType))
+            {
+                NextToken();
+                return new IntegerType();
+            }
+            return null;
         }
 
         private void NextToken()
@@ -235,11 +236,15 @@ namespace MiniPL
         {
             if (symbol == Accepted)
             {
-                //System.Console.WriteLine( Accepted + " === " + symbol);
                 NextToken();
                 return true;
             }
             return false;
+        }
+
+        private bool Matches(Symbol Expected)
+        {
+            return symbol == Expected;
         }
 
         private bool Require(Symbol Expected)

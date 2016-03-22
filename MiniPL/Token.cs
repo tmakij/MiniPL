@@ -3,17 +3,17 @@
     public sealed class Token
     {
         public Symbol Symbol { get; }
-        private readonly string text;
+        public string Value { get; }
 
-        public Token(string Text, Symbol Symbol)
+        public Token(string Value, Symbol Symbol)
         {
-            text = Text;
+            this.Value = Value;
             this.Symbol = Symbol;
         }
 
         public override string ToString()
         {
-            return Symbol + ": "+ text;
+            return Symbol + ": "+ Value;
         }
     }
 }

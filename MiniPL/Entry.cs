@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace MiniPL
 {
-    public static class Program
+    public static class Entry
     {
         private static int Main(string[] args)
         {
@@ -27,6 +27,12 @@ namespace MiniPL
             catch (SyntaxException ex)
             {
                 Console.WriteLine("SyntaxError: " + ex.Message);
+                Console.ReadKey(false);
+                return -1;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Internal compiler error ¯\\_(ツ)_/¯:\n" + ex.Message);
                 Console.ReadKey(false);
                 return -1;
             }
