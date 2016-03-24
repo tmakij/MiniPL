@@ -29,5 +29,16 @@
             }
             return firstType;
         }
+
+        public ReturnValue Execute(Variables Global)
+        {
+            ReturnValue firstValue = first.Execute(Global);
+            ReturnValue secondValue = second.Execute(Global);
+
+            MiniPLType type = firstValue.Type;
+
+            object retVal = type.BinaryOperation(firstValue.Value, secondValue.Value, expressionOperator);
+            return new ReturnValue(type, retVal);
+        }
     }
 }

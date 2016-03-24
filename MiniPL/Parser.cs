@@ -5,18 +5,12 @@ namespace MiniPL
 {
     public sealed class Parser
     {
-        private readonly MiniPLType stringType = new MiniPLType("String", false);
-        private readonly MiniPLType integerType = new MiniPLType("Integer", false);
-        private readonly IList<Token> tokens;
-        private Token curr;
-        private int position;
-        private Symbol symbol;
+        private readonly TokenStream tokens;
+        private Symbol symbol { get { return tokens.Symbol; } }
 
-        public Parser(IList<Token> Tokens)
+        public Parser(TokenStream Tokens)
         {
             tokens = Tokens;
-            position = -1;
-            NextToken();
         }
 
         public AbstractSyntaxTree Parse()
@@ -68,7 +62,7 @@ namespace MiniPL
                 MiniPLType type = Type();
                 if (type == null)
                 {
-                    throw new SyntaxException("Expected type, but " + symbol + " was found" + position);
+                    throw new SyntaxException("Expected type, but " + symbol + " was found");
                 }
                 IExpression expr = null;
                 if (Accept(Symbol.Assigment))
@@ -182,9 +176,9 @@ namespace MiniPL
 
             if (Matches(Symbol.IntegerLiteral))
             {
-                int val = int.Parse(curr.Value);
-                NextToken();
-                return new IntegerLiteralOperand(val, integerType);
+                int val = int.Parse(tokens.Current.Value);
+                tokens.Next();
+                return new IntegerLiteralOperand(val, MiniPLType.Integer);
             }
             if (Accept(Symbol.ClosureOpen))
             {
@@ -203,8 +197,8 @@ namespace MiniPL
         {
             if (Matches(Symbol.Identifier))
             {
-                VariableIdentifier id = new VariableIdentifier(curr.Value);
-                NextToken();
+                VariableIdentifier id = new VariableIdentifier(tokens.Current.Value);
+                tokens.Next();
                 return id;
             }
             return null;
@@ -214,24 +208,17 @@ namespace MiniPL
         {
             if (Matches(Symbol.IntegerType))
             {
-                NextToken();
-                return integerType;
+                tokens.Next();
+                return MiniPLType.Integer;
             }
             return null;
-        }
-
-        private void NextToken()
-        {
-            position++;
-            curr = tokens[position];
-            symbol = curr.Symbol;
         }
 
         private bool Accept(Symbol Accepted)
         {
             if (symbol == Accepted)
             {
-                NextToken();
+                tokens.Next();
                 return true;
             }
             return false;

@@ -10,10 +10,5 @@
             this.Value = Value;
             this.Symbol = Symbol;
         }
-
-        public override string ToString()
-        {
-            return Symbol + ": "+ Value;
-        }
     }
 }

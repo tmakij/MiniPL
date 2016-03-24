@@ -6,7 +6,7 @@ namespace MiniPL
     public sealed class SourceStream
     {
         private readonly string file;
-        private int position = -1;
+        private int position;
 
         public SourceStream(string Path)
         {

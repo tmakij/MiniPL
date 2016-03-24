@@ -4,6 +4,10 @@
     {
         IScannerState IScannerState.Read(TokenConstruction Current, char Read, StateStorage States)
         {
+            if (char.IsWhiteSpace(Read))
+            {
+                return this;
+            }
             if (char.IsLetter(Read))
             {
                 Current.Append(Read);
@@ -13,11 +17,11 @@
                         return States.Identifier;
                     case 'i':
                         /*int, in*/
-                        return States.IntegerI;
+                        return States.Integer;
                     case 'e':
                         return States.Identifier;
                     case 'p':
-                        return States.PrintP;
+                        return States.Print;
                     case 'd':
                         return States.Identifier;
                     case 'r':
@@ -29,7 +33,7 @@
                     case 'a':
                         return States.Identifier;
                     case 'v':
-                        return States.VariableV;
+                        return States.Variable;
                     default:
                         return States.Identifier;
                 }
@@ -39,42 +43,27 @@
                 Current.Append(Read);
                 return States.IntegerLiteral;
             }
-            if (Read == '/')
+            switch (Read)
             {
-                return States.CommentStart;
-            }
-            if (Read == ':')
-            {
-                return States.Colon;
-            }
-            if (Read == '+')
-            {
-                Current.End(Symbol.Addition);
-                return this;
-            }
-            if (Read == '*')
-            {
-                Current.End(Symbol.Multiplication);
-                return this;
-            }
-            if (Read == ';')
-            {
-                Current.End(Symbol.SemiColon);
-                return this;
-            }
-            if (Read == '(')
-            {
-                Current.End(Symbol.ClosureOpen);
-                return this;
-            }
-            if (Read == ')')
-            {
-                Current.End(Symbol.ClosureClose);
-                return this;
-            }
-            if (char.IsWhiteSpace(Read))
-            {
-                return this;
+                case '/':
+                    return States.CommentStart;
+                case ':':
+                    return States.Colon;
+                case '+':
+                    Current.End(Symbol.Addition);
+                    return this;
+                case '*':
+                    Current.End(Symbol.Multiplication);
+                    return this;
+                case ';':
+                    Current.End(Symbol.SemiColon);
+                    return this;
+                case '(':
+                    Current.End(Symbol.ClosureOpen);
+                    return this;
+                case ')':
+                    Current.End(Symbol.ClosureClose);
+                    return this;
             }
             throw new LexerException("Invalid character " + Read);
         }

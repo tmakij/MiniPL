@@ -29,5 +29,12 @@
                 throw new TypeMismatchException(type, assigmentType);
             }
         }
+
+        public void Execute(Variables Scope)
+        {
+            RuntimeVariable var = Scope.GetValue(identifier);
+            ReturnValue ret = expression.Execute(Scope);
+            var.Value = ret.Value;
+        }
     }
 }

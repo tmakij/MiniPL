@@ -28,5 +28,14 @@ namespace MiniPL.AST
                 item.CheckType(types);
             }
         }
+
+        public void Execute()
+        {
+            Variables globalScope = new Variables();
+            foreach (IStatement item in statements)
+            {
+                item.Execute(globalScope);
+            }
+        }
     }
 }

@@ -1,11 +1,11 @@
 ﻿namespace MiniPL.ScannerStates
 {
-    public sealed class PrintX : IScannerState
+    public sealed class SingleState : IScannerState
     {
         private readonly char nextChar;
         private readonly IScannerState nextState;
 
-        public PrintX(char NextChar, IScannerState NextState)
+        public SingleState(char NextChar, IScannerState NextState)
         {
             nextChar = NextChar;
             nextState = NextState;

@@ -1,4 +1,6 @@
-﻿namespace MiniPL.AST
+﻿using System;
+
+namespace MiniPL.AST
 {
     public sealed class PrintStatement : IStatement
     {
@@ -17,6 +19,12 @@
         public void CheckType(IdentifierTypes Types)
         {
             toPrint.NodeType(Types);
+        }
+
+        public void Execute(Variables Scope)
+        {
+            ReturnValue ret = toPrint.Execute(Scope);
+            Console.WriteLine(ret.Value);
         }
     }
 }

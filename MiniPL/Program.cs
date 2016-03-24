@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using MiniPL.AST;
 
 namespace MiniPL
@@ -12,51 +11,47 @@ namespace MiniPL
             {
                 SourceStream source = new SourceStream(@"D:\Timo\MiniPL Samples\a.txt");
                 Scanner scanner = new Scanner(source);
-                IList<Token> tokens = scanner.GenerateTokens();
+                TokenStream tokens = scanner.GenerateTokens();
                 Parser parser = new Parser(tokens);
                 AbstractSyntaxTree tree = parser.Parse();
                 tree.CheckIdentifiers();
                 tree.CheckTypes();
-                Console.WriteLine("Valid program!");
+                Console.WriteLine("Valid program!\nExecuting...");
+                tree.Execute();
                 Console.ReadKey(false);
                 return 0;
             }
             catch (LexerException ex)
             {
-                Console.WriteLine("LexicalError: " + ex.Message);
-                Console.ReadKey(false);
-                return -1;
+                return Error("LexicalError: " + ex.Message);
             }
             catch (SyntaxException ex)
             {
-                Console.WriteLine("SyntaxError: " + ex.Message);
-                Console.ReadKey(false);
-                return -1;
+                return Error("SyntaxError: " + ex.Message);
             }
             catch (UninitializedVariableException ex)
             {
-                Console.WriteLine("Uninitialized variable " + ex.Identifier);
-                Console.ReadKey(false);
-                return -1;
+                return Error("Uninitialized variable " + ex.Identifier);
             }
             catch (TypeMismatchException ex)
             {
-                Console.WriteLine("Type mismatch: Expected " + ex.Expected + " but " + ex.Found + " was found");
-                Console.ReadKey(false);
-                return -1;
+                return Error("Type mismatch: Expected " + ex.Expected + " but " + ex.Found + " was found");
             }
             catch (VariableNameDefinedException ex)
             {
-                Console.WriteLine("Variable \"" + ex.Identifier + "\" is defined twice in the program");
-                Console.ReadKey(false);
-                return -1;
+                return Error("Variable \"" + ex.Identifier + "\" is defined more than once");
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Internal compiler error ¯\\_(ツ)_/¯:\n" + ex.Message);
-                Console.ReadKey(false);
-                return -1;
+                return Error("Internal compiler error ¯\\_(ツ)_/¯:\n" + ex.Message);
             }
+        }
+
+        private static int Error(string Message)
+        {
+            Console.Error.WriteLine(Message);
+            Console.ReadKey(false);
+            return -1;
         }
     }
 }

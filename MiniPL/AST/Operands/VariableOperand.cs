@@ -21,5 +21,11 @@
         {
             return Types.GetIdentifierType(variable);
         }
+
+        public ReturnValue Execute(Variables Global)
+        {
+            RuntimeVariable var = Global.GetValue(variable);
+            return new ReturnValue(var.Type, var.Value);
+        }
     }
 }

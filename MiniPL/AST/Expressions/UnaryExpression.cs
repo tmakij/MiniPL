@@ -19,11 +19,16 @@
         public MiniPLType NodeType(IdentifierTypes Types)
         {
             MiniPLType type = operand.NodeType(Types);
-            if (type.ToString() != "Integer")
+            if (!type.Equals(MiniPLType.Integer))
             {
-                throw new TypeMismatchException(new MiniPLType("",false), type);
+                throw new TypeMismatchException(MiniPLType.Integer, type);
             }
             return type;
+        }
+
+        public ReturnValue Execute(Variables Global)
+        {
+            return operand.Execute(Global);
         }
     }
 }

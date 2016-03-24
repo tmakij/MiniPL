@@ -5,9 +5,13 @@ namespace MiniPL
 {
     public sealed class TokenConstruction
     {
-        public IList<Token> Tokens { get { return tokens.AsReadOnly(); } }
         private readonly StringBuilder curr = new StringBuilder();
         private readonly List<Token> tokens = new List<Token>();
+
+        public TokenStream CreateStream()
+        {
+            return new TokenStream(tokens.AsReadOnly());
+        }
 
         public void Append(char Character)
         {
@@ -27,7 +31,7 @@ namespace MiniPL
             string dbg;
             if (ID == Symbol.IntegerLiteral || ID == Symbol.Identifier)
             {
-                dbg = ID +": " + res;
+                dbg = ID + ": " + res;
             }
             else
             {

@@ -7,26 +7,28 @@
         public IScannerState Comment { get; } = new Comment();
         public IScannerState CommentEnd { get; } = new CommentEnd();
         public IScannerState Identifier { get; } = new Identifier();
-        public IScannerState VariableV { get; } = new VariableV();
-        public IScannerState VariableA { get; } = new VariableA();
-        public IScannerState VariableR { get; } = new VariableR();
         public IScannerState Colon { get; } = new Colon();
         public IScannerState IntegerLiteral { get; } = new IntegerLiteral();
-        public IScannerState IntegerI { get; } = new IntegerI();
-        public IScannerState IntegerN { get; } = new IntegerN();
-        public IScannerState IntegerT { get; } = new IntegerT();
-        public IScannerState PrintP { get; }
-        public IScannerState PrintR { get; }
-        public IScannerState PrintI { get; }
-        public IScannerState PrintN { get; }
-        public IScannerState PrintT { get; } = new PrintT();
+        public IScannerState Print { get; }
+        public IScannerState Variable { get; }
+        public IScannerState Integer { get; }
 
         public StateStorage()
         {
-            PrintN = new PrintX('t', PrintT);
-            PrintI = new PrintX('n', PrintN);
-            PrintR = new PrintX('i', PrintI);
-            PrintP = new PrintX('r', PrintR);
+            IScannerState PrintT = new SingleStateEnd(Symbol.PrintProcedure);
+            IScannerState PrintN = new SingleState('t', PrintT);
+            IScannerState PrintI = new SingleState('n', PrintN);
+            IScannerState PrintR = new SingleState('i', PrintI);
+            Print = new SingleState('r', PrintR);
+
+
+            IScannerState VariableR = new SingleStateEnd(Symbol.Variable);
+            IScannerState VariableA = new SingleState('r', VariableR);
+            Variable = new SingleState('a', VariableA);
+
+            IScannerState IntegerT = new SingleStateEnd(Symbol.IntegerType);
+            IScannerState IntegerN = new SingleState('t', IntegerT);
+            Integer = new SingleState('n', IntegerN);
         }
     }
 }

@@ -19,5 +19,10 @@
         {
             return type;
         }
+
+        public ReturnValue Execute(Variables Global)
+        {
+            return new ReturnValue(type, literal);
+        }
     }
 }

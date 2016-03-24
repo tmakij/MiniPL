@@ -47,6 +47,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AST\AbstractSyntaxTree.cs" />
+    <Compile Include="AST\Execution\IBinaryOperator.cs" />
+    <Compile Include="AST\Execution\IntegerAddition.cs" />
+    <Compile Include="AST\Execution\IntegerMultiplication.cs" />
+    <Compile Include="AST\Execution\ReturnValue.cs" />
+    <Compile Include="AST\Execution\RuntimeVariable.cs" />
     <Compile Include="AST\IAstNode.cs" />
     <Compile Include="AST\IIDentifierHolder.cs" />
     <Compile Include="AST\Statements\AssigmentStatement.cs" />
@@ -69,6 +74,7 @@
     <Compile Include="AST\Operands\VariableOperand.cs" />
     <Compile Include="AST\IdentifierTypes.cs" />
     <Compile Include="AST\VariableNameDefinedException.cs" />
+    <Compile Include="AST\Variables.cs" />
     <Compile Include="CharToString.cs" />
     <Compile Include="LexerException.cs" />
     <Compile Include="Parser.cs" />
@@ -78,26 +84,21 @@
     <Compile Include="ScannerStates\Base.cs" />
     <Compile Include="ScannerStates\Colon.cs" />
     <Compile Include="ScannerStates\CommentEnd.cs" />
-    <Compile Include="ScannerStates\IntegerI.cs" />
     <Compile Include="ScannerStates\IntegerLiteral.cs" />
     <Compile Include="ScannerStates\CommentStart.cs" />
     <Compile Include="ScannerStates\Comment.cs" />
     <Compile Include="ScannerStates\Identifier.cs" />
-    <Compile Include="ScannerStates\IntegerN.cs" />
-    <Compile Include="ScannerStates\IntegerT.cs" />
     <Compile Include="ScannerStates\IScannerState.cs" />
-    <Compile Include="ScannerStates\PrintX.cs" />
-    <Compile Include="ScannerStates\PrintT.cs" />
+    <Compile Include="ScannerStates\SingleState.cs" />
+    <Compile Include="ScannerStates\SingleStateEnd.cs" />
     <Compile Include="ScannerStates\StateStorage.cs" />
-    <Compile Include="ScannerStates\VariableA.cs" />
-    <Compile Include="ScannerStates\VariableR.cs" />
-    <Compile Include="ScannerStates\VariableV.cs" />
     <Compile Include="SourceStream.cs" />
     <Compile Include="Symbol.cs" />
     <Compile Include="SyntaxException.cs" />
     <Compile Include="SyntaxNode.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="TokenConstruction.cs" />
+    <Compile Include="TokenStream.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

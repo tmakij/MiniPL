@@ -31,5 +31,15 @@
                 throw new TypeMismatchException(type, assigmentType);
             }
         }
+
+        public void Execute(Variables Scope)
+        {
+            Scope.AddIdentifier(identifier, type);
+            if (optionalAssigment != null)
+            {
+                object assigment = optionalAssigment.Execute(Scope).Value;
+                Scope.GetValue(identifier).Value = assigment;
+            }
+        }
     }
 }

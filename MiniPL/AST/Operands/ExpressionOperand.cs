@@ -18,5 +18,10 @@
         {
             return expression.NodeType(Types);
         }
+
+        public ReturnValue Execute(Variables Global)
+        {
+            return expression.Execute(Global);
+        }
     }
 }
