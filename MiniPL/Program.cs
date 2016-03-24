@@ -9,7 +9,7 @@ namespace MiniPL
         {
             try
             {
-                SourceStream source = new SourceStream(@"D:\Timo\MiniPL Samples\a.txt");
+                SourceStream source = new SourceStream(@"D:\Timo\MiniPL Samples\b.txt");
                 Scanner scanner = new Scanner(source);
                 TokenStream tokens = scanner.GenerateTokens();
                 Parser parser = new Parser(tokens);

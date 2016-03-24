@@ -84,6 +84,8 @@
     <Compile Include="ScannerStates\Base.cs" />
     <Compile Include="ScannerStates\Colon.cs" />
     <Compile Include="ScannerStates\CommentEnd.cs" />
+    <Compile Include="ScannerStates\DoublePeriod.cs" />
+    <Compile Include="ScannerStates\InN.cs" />
     <Compile Include="ScannerStates\IntegerLiteral.cs" />
     <Compile Include="ScannerStates\CommentStart.cs" />
     <Compile Include="ScannerStates\Comment.cs" />
@@ -92,6 +94,7 @@
     <Compile Include="ScannerStates\SingleState.cs" />
     <Compile Include="ScannerStates\SingleStateEnd.cs" />
     <Compile Include="ScannerStates\StateStorage.cs" />
+    <Compile Include="ScannerStates\StringLiteral.cs" />
     <Compile Include="SourceStream.cs" />
     <Compile Include="Symbol.cs" />
     <Compile Include="SyntaxException.cs" />

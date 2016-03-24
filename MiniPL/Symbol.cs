@@ -3,7 +3,6 @@
     public enum Symbol
     {
         EndOfInput,
-
         Identifier,
         Variable,
         IntegerLiteral,
@@ -16,7 +15,21 @@
         SemiColon,
         IntegerType,
         PrintProcedure,
-
-
+        StringLiteral,
+        ReadProcedure,
+        For,
+        In,
+        Range,
+        Substraction,
+        Equality,
+        End,
+        Assert,
+        StringType,
+        BooleanType,
+        Do,
+        Division,
+        LogicalAnd,
+        LogicalNot,
+        LessThan
     }
 }

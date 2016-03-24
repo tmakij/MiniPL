@@ -7,7 +7,7 @@
             if (char.IsNumber(Read))
             {
                 Current.Append(Read);
-                return States.IntegerLiteral;
+                return this;
             }
             Current.End(Symbol.IntegerLiteral);
             return States.Base.Read(Current, Read, States);

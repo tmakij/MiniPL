@@ -14,24 +14,24 @@
                 switch (Read)
                 {
                     case 'f':
-                        return States.Identifier;
+                        return States.For;
                     case 'i':
                         /*int, in*/
-                        return States.Integer;
+                        return States.In;
                     case 'e':
-                        return States.Identifier;
+                        return States.End;
                     case 'p':
                         return States.Print;
                     case 'd':
-                        return States.Identifier;
+                        return States.Do;
                     case 'r':
-                        return States.Identifier;
+                        return States.Read;
                     case 's':
-                        return States.Identifier;
+                        return States.String;
                     case 'b':
-                        return States.Identifier;
+                        return States.Boolean;
                     case 'a':
-                        return States.Identifier;
+                        return States.Assert;
                     case 'v':
                         return States.Variable;
                     default:
@@ -49,6 +49,13 @@
                     return States.CommentStart;
                 case ':':
                     return States.Colon;
+                case '"':
+                    return States.StringLiteral;
+                case '.':
+                    return States.Range;
+                case '=':
+                    Current.End(Symbol.Equality);
+                    return this;
                 case '+':
                     Current.End(Symbol.Addition);
                     return this;
@@ -63,6 +70,9 @@
                     return this;
                 case ')':
                     Current.End(Symbol.ClosureClose);
+                    return this;
+                case '-':
+                    Current.End(Symbol.Substraction);
                     return this;
             }
             throw new LexerException("Invalid character " + Read);

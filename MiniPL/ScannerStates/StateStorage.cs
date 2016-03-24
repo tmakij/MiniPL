@@ -9,26 +9,42 @@
         public IScannerState Identifier { get; } = new Identifier();
         public IScannerState Colon { get; } = new Colon();
         public IScannerState IntegerLiteral { get; } = new IntegerLiteral();
+        public IScannerState StringLiteral { get; } = new StringLiteral();
+        public IScannerState Range { get; } = new DoublePeriod();
+
+        public IScannerState In { get; } = new SingleState('n', new InN());
+        public IScannerState IntegerEnd { get; } = new SingleStateEnd(Symbol.IntegerType);
         public IScannerState Print { get; }
         public IScannerState Variable { get; }
-        public IScannerState Integer { get; }
+        public IScannerState Read { get; }
+        public IScannerState For { get; }
+        public IScannerState End { get; }
+        public IScannerState Assert { get; }
+        public IScannerState String { get; }
+        public IScannerState Boolean { get; }
+        public IScannerState Do { get; }
 
         public StateStorage()
         {
-            IScannerState PrintT = new SingleStateEnd(Symbol.PrintProcedure);
-            IScannerState PrintN = new SingleState('t', PrintT);
-            IScannerState PrintI = new SingleState('n', PrintN);
-            IScannerState PrintR = new SingleState('i', PrintI);
-            Print = new SingleState('r', PrintR);
+            Print = Scanner(Symbol.PrintProcedure, "print");
+            Variable = Scanner(Symbol.Variable, "var");
+            Read = Scanner(Symbol.ReadProcedure, "read");
+            For = Scanner(Symbol.For, "for");
+            End = Scanner(Symbol.End, "end");
+            Assert = Scanner(Symbol.Assert, "assert");
+            String = Scanner(Symbol.StringType, "string");
+            Boolean = Scanner(Symbol.BooleanType, "bool");
+            Do = Scanner(Symbol.Do, "do");
+        }
 
-
-            IScannerState VariableR = new SingleStateEnd(Symbol.Variable);
-            IScannerState VariableA = new SingleState('r', VariableR);
-            Variable = new SingleState('a', VariableA);
-
-            IScannerState IntegerT = new SingleStateEnd(Symbol.IntegerType);
-            IScannerState IntegerN = new SingleState('t', IntegerT);
-            Integer = new SingleState('n', IntegerN);
+        private static IScannerState Scanner(Symbol End, string Moves)
+        {
+            IScannerState curr = new SingleStateEnd(End);
+            for (int i = Moves.Length - 1; i > 0; i--)
+            {
+                curr = new SingleState(Moves[i], curr);
+            }
+            return curr;
         }
     }
 }
