@@ -1,18 +1,20 @@
 ﻿namespace MiniPL.ScannerStates
 {
-    public sealed class Comment : IScannerState
+    public sealed class ForwardSlash : IScannerState
     {
         IScannerState IScannerState.Read(TokenConstruction Current, char Read, StateStorage States)
         {
             if (Read == '*')
             {
-                return States.CommentEnd;
+                States.IncreaseLevel();
+                return States.Comment;
             }
             if (Read == '/')
             {
-                return States.NestedCommentStart;
+                return States.SingleLineComment;
             }
-            return this;
+            Current.End(Symbol.Division);
+            return States.Base.Read(Current, Read, States);
         }
     }
 }

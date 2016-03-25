@@ -90,48 +90,55 @@ namespace MiniPL
 
             if (Accept(Symbol.PrintProcedure))
             {
-                IExpression expr = Expression();
-                if (expr == null)
+                IExpression toPrint = Expression();
+                if (toPrint == null)
                 {
                     throw new SyntaxException("Expected Expression, but found " + symbol);
                 }
-                return new PrintStatement(expr);
+                return new PrintStatement(toPrint);
+            }
+            if (Accept(Symbol.Assert))
+            {
+                IExpression toAssert = Expression();
+                if (toAssert == null)
+                {
+                    throw new SyntaxException("Expected Expression, but found " + symbol);
+                }
+                return new AssertStatement(toAssert);
             }
             return null;
         }
 
         private IExpression Expression()
         {
-            /*if (Accept(Symbol.Addition))
+            if (Accept(Symbol.LogicalNot))
             {
-                throw new System.NotImplementedException();
-                SyntaxNode opr = Operator();
+                IOperand opr = Operand();
                 if (opr == null)
                 {
-                    throw new SyntaxException("Expected operator, but " + symbol + " was found");
+                    throw new SyntaxException("Expected operand, but " + symbol + " was found");
                 }
-                unary.Add(opr);
-                return opr;
-            }*/
+                return new UnaryExpression(OperatorType.Negation, opr);
+            }
             IOperand firstOperand = Operand();
             if (firstOperand != null)
             {
-                OperatorType? opr = ReadOperator();
-                if (!opr.HasValue)
+                OperatorType opr = ReadOperator();
+                if (opr == OperatorType.None || opr == OperatorType.Negation)
                 {
-                    return new UnaryExpression(OperatorType.Addition, firstOperand);
+                    return new UnaryExpression(opr, firstOperand);
                 }
                 IOperand secondOperand = Operand();
                 if (secondOperand == null)
                 {
                     throw new SyntaxException("Expected operand, but " + symbol + " was found");
                 }
-                return new BinaryExpression(firstOperand, opr.Value, secondOperand);
+                return new BinaryExpression(firstOperand, opr, secondOperand);
             }
             return null;
         }
 
-        private OperatorType? ReadOperator()
+        private OperatorType ReadOperator()
         {
             if (Accept(Symbol.Addition))
             {
@@ -141,44 +148,35 @@ namespace MiniPL
             {
                 return OperatorType.Multiplication;
             }
-            return null;
-        }
-
-        private SyntaxNode Operator()
-        {
-            if (Accept(Symbol.Addition))
+            if (Accept(Symbol.Substraction))
             {
-                return MakeNode(Symbol.Addition);
+                return OperatorType.Substraction;
             }
-            if (Accept(Symbol.Multiplication))
+            if (Accept(Symbol.Division))
             {
-                return MakeNode(Symbol.Multiplication);
+                return OperatorType.Division;
             }
-            return null;
-        }
-
-        private OperatorType UnaryOperator()
-        {
-            if (Accept(Symbol.Addition))
-            {
-                return OperatorType.Addition;
-            }
-            return OperatorType.Addition;
+            return OperatorType.None;
         }
 
         private IOperand Operand()
         {
-            VariableIdentifier varIdent = Identifier();
-            if (varIdent != null)
-            {
-                return new VariableOperand(varIdent);
-            }
-
             if (Matches(Symbol.IntegerLiteral))
             {
                 int val = int.Parse(tokens.Current.Value);
                 tokens.Next();
                 return new IntegerLiteralOperand(val, MiniPLType.Integer);
+            }
+            if (Matches(Symbol.StringLiteral))
+            {
+                string val = tokens.Current.Value;
+                tokens.Next();
+                return new StringLiteralOperand(val, MiniPLType.String);
+            }
+            VariableIdentifier varIdent = Identifier();
+            if (varIdent != null)
+            {
+                return new VariableOperand(varIdent);
             }
             if (Accept(Symbol.ClosureOpen))
             {
@@ -211,6 +209,16 @@ namespace MiniPL
                 tokens.Next();
                 return MiniPLType.Integer;
             }
+            if (Matches(Symbol.StringType))
+            {
+                tokens.Next();
+                return MiniPLType.String;
+            }
+            if (Matches(Symbol.BooleanType))
+            {
+                tokens.Next();
+                return MiniPLType.Boolean;
+            }
             return null;
         }
 
@@ -236,21 +244,6 @@ namespace MiniPL
                 throw new SyntaxException("Expected " + Expected + ", but " + symbol + " was found");
             }
             return true;
-        }
-
-        private SyntaxNode ReadNode(Symbol Symbol)
-        {
-            if (Accept(Symbol))
-            {
-                return MakeNode(Symbol);
-            }
-            return null;
-        }
-
-        private SyntaxNode MakeNode(Symbol Symbol)
-        {
-            SyntaxNode node = new SyntaxNode(Symbol);
-            return node;
         }
     }
 }

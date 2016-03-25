@@ -19,16 +19,22 @@
             {
                 throw new VariableNameDefinedException(identifier);
             }
-            optionalAssigment.CheckIdentifiers(Used);
+            if (optionalAssigment != null)
+            {
+                optionalAssigment.CheckIdentifiers(Used);
+            }
         }
 
         public void CheckType(IdentifierTypes Types)
         {
             Types.SetIdentifierType(identifier, type);
-            MiniPLType assigmentType = optionalAssigment.NodeType(Types);
-            if (!assigmentType.Equals(type))
+            if (optionalAssigment != null)
             {
-                throw new TypeMismatchException(type, assigmentType);
+                MiniPLType assigmentType = optionalAssigment.NodeType(Types);
+                if (!assigmentType.Equals(type))
+                {
+                    throw new TypeMismatchException(type, assigmentType);
+                }
             }
         }
 

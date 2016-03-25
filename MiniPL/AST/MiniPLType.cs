@@ -4,32 +4,54 @@ namespace MiniPL.AST
 {
     public sealed class MiniPLType
     {
-        public static MiniPLType Integer { get; } = new MiniPLType("Integer");
-        public static MiniPLType String { get; } = new MiniPLType("String");
-        public static MiniPLType Boolean { get; } = new MiniPLType("Boolean");
+        public static MiniPLType Integer { get; } = new MiniPLType("Integer", 0);
+        public static MiniPLType String { get; } = new MiniPLType("String", string.Empty);
+        public static MiniPLType Boolean { get; } = new MiniPLType("Boolean", false);
 
         static MiniPLType()
         {
-            Integer.AddOperator(OperatorType.Addition, new IntegerAddition());
-            Integer.AddOperator(OperatorType.Multiplication, new IntegerMultiplication());
+            Integer.AddBinaryOperator(OperatorType.Addition, new IntegerAddition());
+            Integer.AddBinaryOperator(OperatorType.Multiplication, new IntegerMultiplication());
+            Integer.AddBinaryOperator(OperatorType.Substraction, new IntegerSubstraction());
+            Integer.AddBinaryOperator(OperatorType.Division, new IntegerDivision());
+            String.AddBinaryOperator(OperatorType.Addition, new StringConcatenation());
+            Boolean.AddUnaryOperator(OperatorType.Negation, new BooleanNegation());
         }
 
-        private readonly Dictionary<OperatorType, IBinaryOperator> operators = new Dictionary<OperatorType, IBinaryOperator>();
+        public object DefaultValue { get; }
+        private readonly Dictionary<OperatorType, IBinaryOperator> binaryOperators = new Dictionary<OperatorType, IBinaryOperator>();
+        private readonly Dictionary<OperatorType, IUnaryOperator> unaryOperators = new Dictionary<OperatorType, IUnaryOperator>();
         private readonly string name;
 
-        private MiniPLType(string Name)
+        private MiniPLType(string Name, object DefaultValue)
         {
             name = Name;
+            this.DefaultValue = DefaultValue;
         }
 
-        private void AddOperator(OperatorType Type, IBinaryOperator Operator)
+        private void AddBinaryOperator(OperatorType Type, IBinaryOperator Operator)
         {
-            operators.Add(Type, Operator);
+            binaryOperators.Add(Type, Operator);
+        }
+
+        private void AddUnaryOperator(OperatorType Type, IUnaryOperator Operator)
+        {
+            unaryOperators.Add(Type, Operator);
         }
 
         public object BinaryOperation(object First, object Second, OperatorType Operator)
         {
-            return operators[Operator].Execute(First, Second);
+            return binaryOperators[Operator].Execute(First, Second);
+        }
+
+        public object UnaryOperation(object Operand, OperatorType Operator)
+        {
+            return unaryOperators[Operator].Execute(Operand);
+        }
+
+        public bool HasOperatorDefined(OperatorType Operator)
+        {
+            return unaryOperators.ContainsKey(Operator) || binaryOperators.ContainsKey(Operator);
         }
 
         public override string ToString()

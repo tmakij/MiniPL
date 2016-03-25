@@ -47,13 +47,20 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AST\AbstractSyntaxTree.cs" />
+    <Compile Include="AST\AssertationExecption.cs" />
+    <Compile Include="AST\Execution\BooleanNegation.cs" />
     <Compile Include="AST\Execution\IBinaryOperator.cs" />
     <Compile Include="AST\Execution\IntegerAddition.cs" />
+    <Compile Include="AST\Execution\IntegerDivision.cs" />
     <Compile Include="AST\Execution\IntegerMultiplication.cs" />
+    <Compile Include="AST\Execution\IntegerSubstraction.cs" />
+    <Compile Include="AST\Execution\IUnaryOperator.cs" />
     <Compile Include="AST\Execution\ReturnValue.cs" />
     <Compile Include="AST\Execution\RuntimeVariable.cs" />
+    <Compile Include="AST\Execution\StringConcatenation.cs" />
     <Compile Include="AST\IAstNode.cs" />
     <Compile Include="AST\IIDentifierHolder.cs" />
+    <Compile Include="AST\Statements\AssertStatement.cs" />
     <Compile Include="AST\Statements\AssigmentStatement.cs" />
     <Compile Include="AST\Expressions\BinaryExpression.cs" />
     <Compile Include="AST\Statements\DeclarationStatement.cs" />
@@ -68,6 +75,7 @@
     <Compile Include="AST\Expressions\UnaryExpression.cs" />
     <Compile Include="AST\Statements\PrintStatement.cs" />
     <Compile Include="AST\MiniPLType.cs" />
+    <Compile Include="AST\UndefinedOperatorException.cs" />
     <Compile Include="AST\UninitializedVariableException.cs" />
     <Compile Include="AST\UsedIdentifiers.cs" />
     <Compile Include="AST\VariableIdentifier.cs" />
@@ -85,12 +93,14 @@
     <Compile Include="ScannerStates\Colon.cs" />
     <Compile Include="ScannerStates\CommentEnd.cs" />
     <Compile Include="ScannerStates\DoublePeriod.cs" />
+    <Compile Include="ScannerStates\ForwardSlash.cs" />
     <Compile Include="ScannerStates\InN.cs" />
     <Compile Include="ScannerStates\IntegerLiteral.cs" />
-    <Compile Include="ScannerStates\CommentStart.cs" />
+    <Compile Include="ScannerStates\NestedCommentStart.cs" />
     <Compile Include="ScannerStates\Comment.cs" />
     <Compile Include="ScannerStates\Identifier.cs" />
     <Compile Include="ScannerStates\IScannerState.cs" />
+    <Compile Include="ScannerStates\SingleLineComment.cs" />
     <Compile Include="ScannerStates\SingleState.cs" />
     <Compile Include="ScannerStates\SingleStateEnd.cs" />
     <Compile Include="ScannerStates\StateStorage.cs" />
@@ -98,7 +108,6 @@
     <Compile Include="SourceStream.cs" />
     <Compile Include="Symbol.cs" />
     <Compile Include="SyntaxException.cs" />
-    <Compile Include="SyntaxNode.cs" />
     <Compile Include="Token.cs" />
     <Compile Include="TokenConstruction.cs" />
     <Compile Include="TokenStream.cs" />

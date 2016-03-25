@@ -1,14 +1,15 @@
 ﻿namespace MiniPL.ScannerStates
 {
-    public sealed class CommentStart : IScannerState
+    public sealed class NestedCommentStart : IScannerState
     {
         IScannerState IScannerState.Read(TokenConstruction Current, char Read, StateStorage States)
         {
             if (Read == '*')
             {
+                States.IncreaseLevel();
                 return States.Comment;
             }
-            throw new LexerException("Invalid comment start, expected \"*\" but found \"" + Read + "\"");
+            return States.Comment;
         }
     }
 }

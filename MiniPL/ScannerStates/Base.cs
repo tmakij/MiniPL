@@ -46,13 +46,19 @@
             switch (Read)
             {
                 case '/':
-                    return States.CommentStart;
+                    return States.ForwardSlash;
                 case ':':
                     return States.Colon;
                 case '"':
                     return States.StringLiteral;
                 case '.':
                     return States.Range;
+                case '!':
+                    Current.End(Symbol.LogicalNot);
+                    return this;
+                case '<':
+                    Current.End(Symbol.LessThan);
+                    return this;
                 case '=':
                     Current.End(Symbol.Equality);
                     return this;

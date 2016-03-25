@@ -2,7 +2,11 @@
 {
     public enum OperatorType
     {
+        None,
         Addition,
-        Multiplication
+        Multiplication,
+        Substraction,
+        Division,
+        Negation
     }
 }

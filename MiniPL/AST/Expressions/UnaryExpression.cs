@@ -19,16 +19,22 @@
         public MiniPLType NodeType(IdentifierTypes Types)
         {
             MiniPLType type = operand.NodeType(Types);
-            if (!type.Equals(MiniPLType.Integer))
+            if (expressionOperator != OperatorType.None && !type.HasOperatorDefined(expressionOperator))
             {
-                throw new TypeMismatchException(MiniPLType.Integer, type);
+                throw new UndefinedOperatorException(type, expressionOperator);
             }
             return type;
         }
 
         public ReturnValue Execute(Variables Global)
         {
-            return operand.Execute(Global);
+            ReturnValue ret = operand.Execute(Global);
+            if (expressionOperator != OperatorType.None)
+            {
+                object val = ret.Type.UnaryOperation(ret.Value, expressionOperator);
+                ret = new ReturnValue(ret.Type, val);
+            }
+            return ret;
         }
     }
 }

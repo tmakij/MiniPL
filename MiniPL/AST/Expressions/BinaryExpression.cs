@@ -27,6 +27,10 @@
             {
                 throw new TypeMismatchException(firstType, secondType);
             }
+            if (!firstType.HasOperatorDefined(expressionOperator))
+            {
+                throw new UndefinedOperatorException(firstType, expressionOperator);
+            }
             return firstType;
         }
 

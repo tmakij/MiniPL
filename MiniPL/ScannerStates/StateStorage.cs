@@ -2,8 +2,11 @@
 {
     public sealed class StateStorage
     {
+        public bool IsInNestedComment { get { return commentLevel > 0; } }
+        private int commentLevel;
+
         public IScannerState Base { get; } = new Base();
-        public IScannerState CommentStart { get; } = new CommentStart();
+        public IScannerState NestedCommentStart { get; } = new NestedCommentStart();
         public IScannerState Comment { get; } = new Comment();
         public IScannerState CommentEnd { get; } = new CommentEnd();
         public IScannerState Identifier { get; } = new Identifier();
@@ -11,6 +14,8 @@
         public IScannerState IntegerLiteral { get; } = new IntegerLiteral();
         public IScannerState StringLiteral { get; } = new StringLiteral();
         public IScannerState Range { get; } = new DoublePeriod();
+        public IScannerState SingleLineComment { get; } = new SingleLineComment();
+        public IScannerState ForwardSlash { get; } = new ForwardSlash();
 
         public IScannerState In { get; } = new SingleState('n', new InN());
         public IScannerState IntegerEnd { get; } = new SingleStateEnd(Symbol.IntegerType);
@@ -45,6 +50,16 @@
                 curr = new SingleState(Moves[i], curr);
             }
             return curr;
+        }
+
+        public void IncreaseLevel()
+        {
+            commentLevel++;
+        }
+
+        public void DecreaseLevel()
+        {
+            commentLevel--;
         }
     }
 }

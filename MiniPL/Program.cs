@@ -9,7 +9,7 @@ namespace MiniPL
         {
             try
             {
-                SourceStream source = new SourceStream(@"D:\Timo\MiniPL Samples\b.txt");
+                SourceStream source = new SourceStream(@"D:\Timo\MiniPL Samples\a.txt");
                 Scanner scanner = new Scanner(source);
                 TokenStream tokens = scanner.GenerateTokens();
                 Parser parser = new Parser(tokens);
@@ -35,15 +35,23 @@ namespace MiniPL
             }
             catch (TypeMismatchException ex)
             {
-                return Error("Type mismatch: Expected " + ex.Expected + " but " + ex.Found + " was found");
+                return Error("Type mismatch: Expected \"" + ex.Expected + "\" but \"" + ex.Found + "\" was found");
             }
             catch (VariableNameDefinedException ex)
             {
                 return Error("Variable \"" + ex.Identifier + "\" is defined more than once");
             }
+            catch (UndefinedOperatorException ex)
+            {
+                return Error("Operator \"" + ex.Operator + "\" is not defined for the type " + ex.Type);
+            }
+            catch (AssertationExecption)
+            {
+                return Error("Assertation failure");
+            }
             catch (Exception ex)
             {
-                return Error("Internal compiler error ¯\\_(ツ)_/¯:\n" + ex.Message);
+                return Error("Internal compiler error ¯\\_(ツ)_/¯:\n" + ex.Message + "\n" + ex.StackTrace);
             }
         }
 

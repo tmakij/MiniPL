@@ -8,6 +8,7 @@
         public RuntimeVariable(MiniPLType Type)
         {
             this.Type = Type;
+            Value = Type.DefaultValue;
         }
     }
 }

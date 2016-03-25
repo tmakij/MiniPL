@@ -6,7 +6,11 @@
         {
             if (Read == '/')
             {
-                return States.Base;
+                States.DecreaseLevel();
+                if (!States.IsInNestedComment)
+                {
+                    return States.Base;
+                }
             }
             return States.Comment;
         }
