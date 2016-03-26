@@ -49,6 +49,14 @@ namespace MiniPL
             {
                 return Error("Assertation failure");
             }
+            catch (IntegerParseOverflowException ex)
+            {
+                return Error("Given integer (" + ex.Value + ") is not in the valid range [" + int.MinValue + " - +" + int.MaxValue + "]");
+            }
+            catch (IntegerFormatException ex)
+            {
+                return Error("Given value (\"" + ex.ParseAttempt + "\") is not an integer");
+            }
             catch (Exception ex)
             {
                 return Error("Internal compiler error ¯\\_(ツ)_/¯:\n" + ex.Message + "\n" + ex.StackTrace);

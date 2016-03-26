@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-namespace MiniPL.AST
+﻿namespace MiniPL.AST
 {
     public sealed class AbstractSyntaxTree
     {
-        private readonly IList<IStatement> statements;
+        private readonly ScopedProgram statements;
 
-        public AbstractSyntaxTree(IList<IStatement> Statements)
+        public AbstractSyntaxTree(ScopedProgram Statements)
         {
             statements = Statements;
         }
@@ -14,28 +12,19 @@ namespace MiniPL.AST
         public void CheckIdentifiers()
         {
             UsedIdentifiers identifiers = new UsedIdentifiers();
-            foreach (IStatement item in statements)
-            {
-                item.CheckIdentifiers(identifiers);
-            }
+            statements.CheckIdentifiers(identifiers);
         }
 
         public void CheckTypes()
         {
             IdentifierTypes types = new IdentifierTypes();
-            foreach (IStatement item in statements)
-            {
-                item.CheckType(types);
-            }
+            statements.CheckTypes(types);
         }
 
         public void Execute()
         {
             Variables globalScope = new Variables();
-            foreach (IStatement item in statements)
-            {
-                item.Execute(globalScope);
-            }
+            statements.Execute(globalScope);
         }
     }
 }

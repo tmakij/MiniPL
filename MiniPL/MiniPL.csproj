@@ -60,6 +60,11 @@
     <Compile Include="AST\Execution\StringConcatenation.cs" />
     <Compile Include="AST\IAstNode.cs" />
     <Compile Include="AST\IIDentifierHolder.cs" />
+    <Compile Include="AST\IntegerFormatException.cs" />
+    <Compile Include="AST\IntegerOverflowException.cs" />
+    <Compile Include="AST\IntegerParseOverflowException.cs" />
+    <Compile Include="AST\InvalidTypeException.cs" />
+    <Compile Include="AST\ScopedProgram.cs" />
     <Compile Include="AST\Statements\AssertStatement.cs" />
     <Compile Include="AST\Statements\AssigmentStatement.cs" />
     <Compile Include="AST\Expressions\BinaryExpression.cs" />
@@ -67,6 +72,8 @@
     <Compile Include="AST\Operands\ExpressionOperand.cs" />
     <Compile Include="AST\Expressions\IExpression.cs" />
     <Compile Include="AST\Operands\IntegerLiteralOperand.cs" />
+    <Compile Include="AST\Statements\ForStatement.cs" />
+    <Compile Include="AST\Statements\ReadStatement.cs" />
     <Compile Include="AST\TypeMismatchException.cs" />
     <Compile Include="AST\Operands\IOperand.cs" />
     <Compile Include="AST\Statements\IStatement.cs" />

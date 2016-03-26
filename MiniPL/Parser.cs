@@ -20,22 +20,22 @@ namespace MiniPL
 
         private AbstractSyntaxTree Program()
         {
-            IList<IStatement> statements = Statements();
+            ScopedProgram statements = Statements(Symbol.EndOfInput);
             return new AbstractSyntaxTree(statements);
         }
 
-        private IList<IStatement> Statements()
+        private ScopedProgram Statements(Symbol EndOfScopeSymbol)
         {
             IStatement requiredStatement = Statement();
             if (requiredStatement == null)
             {
-                throw new SyntaxException("Program must do something!");
+                throw new SyntaxException("At least one statement is required");
             }
             Require(Symbol.SemiColon);
-            List<IStatement> statements = new List<IStatement>();
-            statements.Add(requiredStatement);
+            ScopedProgram program = new ScopedProgram();
+            program.Add(requiredStatement);
 
-            while (!Matches(Symbol.EndOfInput))
+            while (!Matches(EndOfScopeSymbol))
             {
                 IStatement stm = Statement();
                 if (stm == null)
@@ -43,10 +43,9 @@ namespace MiniPL
                     throw new SyntaxException("Expected beginning of a statement, but " + symbol + " was found");
                 }
                 Require(Symbol.SemiColon);
-                statements.Add(stm);
+                program.Add(stm);
             }
-
-            return statements.AsReadOnly();
+            return program;
         }
 
         private IStatement Statement()
@@ -87,7 +86,40 @@ namespace MiniPL
                 }
                 return new AssigmentStatement(varIdent, expr);
             }
-
+            if (Accept(Symbol.For))
+            {
+                VariableIdentifier iterator = Identifier();
+                if (iterator == null)
+                {
+                    throw new SyntaxException("Expected identifier, but " + symbol + " was found");
+                }
+                Require(Symbol.In);
+                IExpression lowBound = Expression();
+                if (lowBound == null)
+                {
+                    throw new SyntaxException("Expected Expression, but found " + symbol);
+                }
+                Require(Symbol.Range);
+                IExpression highBound = Expression();
+                if (highBound == null)
+                {
+                    throw new SyntaxException("Expected Expression, but found " + symbol);
+                }
+                Require(Symbol.Do);
+                ScopedProgram toExecute = Statements(Symbol.End);
+                Require(Symbol.End);
+                Require(Symbol.For);
+                return new ForStatement(iterator, lowBound, highBound, toExecute);
+            }
+            if (Accept(Symbol.ReadProcedure))
+            {
+                VariableIdentifier toReadInto = Identifier();
+                if (toReadInto == null)
+                {
+                    throw new SyntaxException(Symbol.Identifier, symbol);
+                }
+                return new ReadStatement(toReadInto);
+            }
             if (Accept(Symbol.PrintProcedure))
             {
                 IExpression toPrint = Expression();
