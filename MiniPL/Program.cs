@@ -1,5 +1,8 @@
 ﻿using System;
-using MiniPL.AST;
+using System.IO;
+using MiniPL.Parser;
+using MiniPL.Parser.AST;
+using MiniPL.Lexer;
 
 namespace MiniPL
 {
@@ -7,27 +10,46 @@ namespace MiniPL
     {
         private static int Main(string[] args)
         {
+#if !DEBUG
+            if (args.Length != 1)
+            {
+                return Error("The program accepts one, and only one, argument, which is the path to the source");
+            }
+#endif
             try
             {
-                SourceStream source = new SourceStream(@"D:\Timo\MiniPL Samples\sandbox.txt");
+#if DEBUG
+                const string sourcePath = @"D:\Timo\MiniPL Samples\sandbox.txt";
+#else
+                string sourcePath = args[0];
+#endif
+                SourceStream source = new SourceStream(sourcePath);
                 Scanner scanner = new Scanner(source);
                 TokenStream tokens = scanner.GenerateTokens();
-                Parser parser = new Parser(tokens);
+                var parser = new MiniPL.Parser.Parser(tokens);
                 AbstractSyntaxTree tree = parser.Parse();
                 tree.CheckIdentifiers();
                 tree.CheckTypes();
-                Console.WriteLine("Valid program!\nExecuting...");
+                Console.WriteLine("Valid program!");
+                Console.WriteLine("Executing...");
+                Console.WriteLine();
                 tree.Execute();
+#if DEBUG
                 Console.ReadKey(false);
+#endif
                 return 0;
+            }
+            catch (FileNotFoundException)
+            {
+                return Error("The given argument path was not found");
             }
             catch (LexerException ex)
             {
-                return Error("LexicalError: " + ex.Message);
+                return Error(ex.Message);
             }
             catch (SyntaxException ex)
             {
-                return Error("SyntaxError: " + ex.Message);
+                return Error(ex.Message);
             }
             catch (UninitializedVariableException ex)
             {
@@ -57,20 +79,22 @@ namespace MiniPL
             {
                 return Error("Given value \"" + ex.ParseAttempt + "\" is not an integer");
             }
-            catch(ImmutableVariableException ex)
+            catch (ImmutableVariableException ex)
             {
                 return Error("Identifier \"" + ex.Identifier + "\" cannot be changed, when it is used as iterator");
             }
             catch (Exception ex)
             {
-                return Error("Internal compiler error ¯\\_(ツ)_/¯:\n" + ex.Message + "\n" + ex.StackTrace);
+                return Error("Internal compiler errors:\n" + ex.Message + "\n" + ex.StackTrace);
             }
         }
 
         private static int Error(string Message)
         {
             Console.Error.WriteLine(Message);
+#if DEBUG
             Console.ReadKey(false);
+#endif
             return -1;
         }
     }
