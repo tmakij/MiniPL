@@ -9,7 +9,7 @@ namespace MiniPL
         {
             try
             {
-                SourceStream source = new SourceStream(@"D:\Timo\MiniPL Samples\a.txt");
+                SourceStream source = new SourceStream(@"D:\Timo\MiniPL Samples\sandbox.txt");
                 Scanner scanner = new Scanner(source);
                 TokenStream tokens = scanner.GenerateTokens();
                 Parser parser = new Parser(tokens);
@@ -55,7 +55,11 @@ namespace MiniPL
             }
             catch (IntegerFormatException ex)
             {
-                return Error("Given value (\"" + ex.ParseAttempt + "\") is not an integer");
+                return Error("Given value \"" + ex.ParseAttempt + "\" is not an integer");
+            }
+            catch(ImmutableVariableException ex)
+            {
+                return Error("Identifier \"" + ex.Identifier + "\" cannot be changed, when it is used as iterator");
             }
             catch (Exception ex)
             {

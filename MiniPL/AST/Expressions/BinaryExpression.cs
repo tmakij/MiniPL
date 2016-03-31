@@ -23,26 +23,26 @@
         {
             MiniPLType firstType = first.NodeType(Types);
             MiniPLType secondType = second.NodeType(Types);
-            if (!firstType.Equals(secondType))
-            {
-                throw new TypeMismatchException(firstType, secondType);
-            }
             if (!firstType.HasOperatorDefined(expressionOperator))
             {
                 throw new UndefinedOperatorException(firstType, expressionOperator);
             }
-            return firstType;
+            if (!firstType.Equals(secondType))
+            {
+                throw new TypeMismatchException(firstType, secondType);
+            }
+            return firstType.BinaryOperation(expressionOperator).ReturnType;
         }
 
         public ReturnValue Execute(Variables Global)
         {
-            ReturnValue firstValue = first.Execute(Global);
-            ReturnValue secondValue = second.Execute(Global);
+            ReturnValue firstExprRetVal = first.Execute(Global);
+            ReturnValue secondExprRetVal = second.Execute(Global);
+            IBinaryOperator opr = firstExprRetVal.Type.BinaryOperation(expressionOperator);
+            object retVal = opr.Execute(firstExprRetVal.Value, secondExprRetVal.Value);
+            MiniPLType retType = opr.ReturnType;
 
-            MiniPLType type = firstValue.Type;
-
-            object retVal = type.BinaryOperation(firstValue.Value, secondValue.Value, expressionOperator);
-            return new ReturnValue(type, retVal);
+            return new ReturnValue(retType, retVal);
         }
     }
 }

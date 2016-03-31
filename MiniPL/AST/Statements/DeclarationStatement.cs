@@ -19,6 +19,7 @@
             {
                 throw new VariableNameDefinedException(identifier);
             }
+            Used.DeclareVariable(identifier);
             if (optionalAssigment != null)
             {
                 optionalAssigment.CheckIdentifiers(Used);

@@ -20,9 +20,15 @@
             {
                 throw new UninitializedVariableException(iterator);
             }
+            if (!Used.IsMutable(iterator))
+            {
+                throw new ImmutableVariableException(iterator);
+            }
+            Used.SetImmutable(iterator);
             lowBound.CheckIdentifiers(Used);
             highBound.CheckIdentifiers(Used);
             toExecute.CheckIdentifiers(Used);
+            Used.SetMutable(iterator);
         }
 
         public void CheckType(IdentifierTypes Types)

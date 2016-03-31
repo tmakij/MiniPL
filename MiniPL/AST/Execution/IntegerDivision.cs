@@ -2,6 +2,8 @@
 {
     public sealed class IntegerDivision : IBinaryOperator
     {
+        public MiniPLType ReturnType { get { return MiniPLType.Integer; } }
+
         public object Execute(object FirstOperand, object SecondOperand)
         {
             int divident = (int)FirstOperand;

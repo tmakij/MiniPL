@@ -7,6 +7,9 @@
         Multiplication,
         Substraction,
         Division,
-        Negation
+        Negation,
+        Equals,
+        LessThan,
+        And
     }
 }

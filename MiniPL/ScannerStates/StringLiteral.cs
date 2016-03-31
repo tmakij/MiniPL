@@ -9,6 +9,10 @@
                 Current.End(Symbol.StringLiteral);
                 return States.Base;
             }
+            if (Read == '\\')
+            {
+                return States.EscapeCharacter;
+            }
             Current.Append(Read);
             return this;
         }

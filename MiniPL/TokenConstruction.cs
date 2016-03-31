@@ -18,6 +18,11 @@ namespace MiniPL
             curr.Append(Character);
         }
 
+        public void AppendNewLine()
+        {
+            curr.AppendLine();
+        }
+
         public void End(Symbol ID)
         {
             string res = TokenText(ID);

@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using MiniPL.AST;
+﻿using MiniPL.AST;
 
 namespace MiniPL
 {
@@ -187,6 +186,18 @@ namespace MiniPL
             if (Accept(Symbol.Division))
             {
                 return OperatorType.Division;
+            }
+            if (Accept(Symbol.Equality))
+            {
+                return OperatorType.Equals;
+            }
+            if (Accept(Symbol.LessThan))
+            {
+                return OperatorType.LessThan;
+            }
+            if (Accept(Symbol.LogicalAnd))
+            {
+                return OperatorType.And;
             }
             return OperatorType.None;
         }

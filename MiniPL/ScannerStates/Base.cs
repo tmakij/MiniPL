@@ -53,6 +53,9 @@
                     return States.StringLiteral;
                 case '.':
                     return States.Range;
+                case '&':
+                    Current.End(Symbol.LogicalAnd);
+                    return this;
                 case '!':
                     Current.End(Symbol.LogicalNot);
                     return this;

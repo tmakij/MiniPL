@@ -17,6 +17,10 @@
             {
                 throw new UninitializedVariableException(identifier);
             }
+            if (!Used.IsMutable(identifier))
+            {
+                throw new ImmutableVariableException(identifier);
+            }
             expression.CheckIdentifiers(Used);
         }
 

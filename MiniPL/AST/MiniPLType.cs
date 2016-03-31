@@ -14,8 +14,15 @@ namespace MiniPL.AST
             Integer.AddBinaryOperator(OperatorType.Multiplication, new IntegerMultiplication());
             Integer.AddBinaryOperator(OperatorType.Substraction, new IntegerSubstraction());
             Integer.AddBinaryOperator(OperatorType.Division, new IntegerDivision());
+            Integer.AddBinaryOperator(OperatorType.Equals, new Equals<int>());
+            Integer.AddBinaryOperator(OperatorType.LessThan, new LessThan<int>());
             String.AddBinaryOperator(OperatorType.Addition, new StringConcatenation());
+            String.AddBinaryOperator(OperatorType.Equals, new Equals<string>());
+            String.AddBinaryOperator(OperatorType.LessThan, new LessThan<string>());
             Boolean.AddUnaryOperator(OperatorType.Negation, new BooleanNegation());
+            Boolean.AddBinaryOperator(OperatorType.Equals, new Equals<bool>());
+            Boolean.AddBinaryOperator(OperatorType.LessThan, new LessThan<bool>());
+            Boolean.AddBinaryOperator(OperatorType.And, new BooleanAnd());
         }
 
         public object DefaultValue { get; }
@@ -39,9 +46,9 @@ namespace MiniPL.AST
             unaryOperators.Add(Type, Operator);
         }
 
-        public object BinaryOperation(object First, object Second, OperatorType Operator)
+        public IBinaryOperator BinaryOperation(OperatorType Operator)
         {
-            return binaryOperators[Operator].Execute(First, Second);
+            return binaryOperators[Operator];
         }
 
         public object UnaryOperation(object Operand, OperatorType Operator)

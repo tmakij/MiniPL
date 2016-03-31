@@ -16,6 +16,7 @@
         public IScannerState Range { get; } = new DoublePeriod();
         public IScannerState SingleLineComment { get; } = new SingleLineComment();
         public IScannerState ForwardSlash { get; } = new ForwardSlash();
+        public IScannerState EscapeCharacter { get; } = new EscapeCharacter();
 
         public IScannerState In { get; } = new SingleState('n', new InN());
         public IScannerState IntegerEnd { get; } = new SingleStateEnd(Symbol.IntegerType);

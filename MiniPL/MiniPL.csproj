@@ -48,18 +48,22 @@
   <ItemGroup>
     <Compile Include="AST\AbstractSyntaxTree.cs" />
     <Compile Include="AST\AssertationExecption.cs" />
+    <Compile Include="AST\Execution\BooleanAnd.cs" />
     <Compile Include="AST\Execution\BooleanNegation.cs" />
+    <Compile Include="AST\Execution\Equals.cs" />
     <Compile Include="AST\Execution\IBinaryOperator.cs" />
     <Compile Include="AST\Execution\IntegerAddition.cs" />
     <Compile Include="AST\Execution\IntegerDivision.cs" />
     <Compile Include="AST\Execution\IntegerMultiplication.cs" />
     <Compile Include="AST\Execution\IntegerSubstraction.cs" />
     <Compile Include="AST\Execution\IUnaryOperator.cs" />
+    <Compile Include="AST\Execution\LessThan.cs" />
     <Compile Include="AST\Execution\ReturnValue.cs" />
     <Compile Include="AST\Execution\RuntimeVariable.cs" />
     <Compile Include="AST\Execution\StringConcatenation.cs" />
     <Compile Include="AST\IAstNode.cs" />
     <Compile Include="AST\IIDentifierHolder.cs" />
+    <Compile Include="AST\ImmutableVariableException.cs" />
     <Compile Include="AST\IntegerFormatException.cs" />
     <Compile Include="AST\IntegerOverflowException.cs" />
     <Compile Include="AST\IntegerParseOverflowException.cs" />
@@ -100,6 +104,7 @@
     <Compile Include="ScannerStates\Colon.cs" />
     <Compile Include="ScannerStates\CommentEnd.cs" />
     <Compile Include="ScannerStates\DoublePeriod.cs" />
+    <Compile Include="ScannerStates\EscapeCharacter.cs" />
     <Compile Include="ScannerStates\ForwardSlash.cs" />
     <Compile Include="ScannerStates\InN.cs" />
     <Compile Include="ScannerStates\IntegerLiteral.cs" />

@@ -24,7 +24,7 @@ namespace MiniPL.AST
         public void Execute(Variables Scope)
         {
             ReturnValue ret = toPrint.Execute(Scope);
-            Console.WriteLine(ret.Value);
+            Console.Write(ret.Value);
         }
     }
 }
