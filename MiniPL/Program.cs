@@ -19,7 +19,7 @@ namespace MiniPL
             try
             {
 #if DEBUG
-                const string sourcePath = @"D:\Timo\MiniPL Samples\sandbox.txt";
+                const string sourcePath = "test.txt";
 #else
                 string sourcePath = args[0];
 #endif

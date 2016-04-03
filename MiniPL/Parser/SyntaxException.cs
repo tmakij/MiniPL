@@ -10,8 +10,8 @@ namespace MiniPL.Parser
         {
         }
 
-        public SyntaxException(Symbol Expected, Symbol Found)
-            : this("Expected " + Expected + " but " + Found + " was found")
+        public SyntaxException(string Expected, Symbol Found)
+            : this("Expected " + Expected + ", but " + Found + " was found")
         {
         }
     }

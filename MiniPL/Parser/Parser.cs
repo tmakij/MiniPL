@@ -8,6 +8,11 @@ namespace MiniPL.Parser
         private readonly TokenStream tokens;
         private Symbol symbol { get { return tokens.Symbol; } }
 
+        private const string expExpression = "expression (operand-operator-operand or (unary operator)-operand)";
+        private const string expOperand = "operand (variable, literal or expression between closures)";
+        private const string expType = "int, string or bool";
+        private const string expIdentifier = "identifier";
+
         public Parser(TokenStream Tokens)
         {
             tokens = Tokens;
@@ -40,7 +45,7 @@ namespace MiniPL.Parser
                 IStatement stm = Statement();
                 if (stm == null)
                 {
-                    throw new SyntaxException("Expected beginning of a statement, but " + symbol + " was found");
+                    throw new SyntaxException("beginning of a statement", symbol);
                 }
                 Require(Symbol.SemiColon);
                 program.Add(stm);
@@ -55,13 +60,13 @@ namespace MiniPL.Parser
                 VariableIdentifier identifierToAssigment = Identifier();
                 if (identifierToAssigment == null)
                 {
-                    throw new SyntaxException("Expected identifier, but " + symbol + " was found");
+                    throw new SyntaxException(expIdentifier, symbol);
                 }
                 Require(Symbol.Colon);
                 MiniPLType type = Type();
                 if (type == null)
                 {
-                    throw new SyntaxException("Expected type, but " + symbol + " was found");
+                    throw new SyntaxException(expType, symbol);
                 }
                 IExpression expr = null;
                 if (Accept(Symbol.Assigment))
@@ -69,7 +74,7 @@ namespace MiniPL.Parser
                     expr = Expression();
                     if (expr == null)
                     {
-                        throw new SyntaxException("Expected expression, but " + symbol + " was found");
+                        throw new SyntaxException(expExpression, symbol);
                     }
                 }
                 return new DeclarationStatement(identifierToAssigment, type, expr);
@@ -82,7 +87,7 @@ namespace MiniPL.Parser
                 IExpression expr = Expression();
                 if (expr == null)
                 {
-                    throw new SyntaxException("Expected expression, but " + symbol + " was found");
+                    throw new SyntaxException(expExpression, symbol);
                 }
                 return new AssigmentStatement(varIdent, expr);
             }
@@ -91,19 +96,19 @@ namespace MiniPL.Parser
                 VariableIdentifier iterator = Identifier();
                 if (iterator == null)
                 {
-                    throw new SyntaxException("Expected identifier, but " + symbol + " was found");
+                    throw new SyntaxException(expIdentifier, symbol);
                 }
                 Require(Symbol.In);
                 IExpression lowBound = Expression();
                 if (lowBound == null)
                 {
-                    throw new SyntaxException("Expected Expression, but found " + symbol);
+                    throw new SyntaxException(expExpression, symbol);
                 }
                 Require(Symbol.Range);
                 IExpression highBound = Expression();
                 if (highBound == null)
                 {
-                    throw new SyntaxException("Expected Expression, but found " + symbol);
+                    throw new SyntaxException(expExpression, symbol);
                 }
                 Require(Symbol.Do);
                 ScopedProgram toExecute = Statements(Symbol.End);
@@ -116,7 +121,7 @@ namespace MiniPL.Parser
                 VariableIdentifier toReadInto = Identifier();
                 if (toReadInto == null)
                 {
-                    throw new SyntaxException(Symbol.Identifier, symbol);
+                    throw new SyntaxException(expIdentifier, symbol);
                 }
                 return new ReadStatement(toReadInto);
             }
@@ -125,7 +130,7 @@ namespace MiniPL.Parser
                 IExpression toPrint = Expression();
                 if (toPrint == null)
                 {
-                    throw new SyntaxException("Expected Expression, but found " + symbol);
+                    throw new SyntaxException(expExpression, symbol);
                 }
                 return new PrintStatement(toPrint);
             }
@@ -134,7 +139,7 @@ namespace MiniPL.Parser
                 IExpression toAssert = Expression();
                 if (toAssert == null)
                 {
-                    throw new SyntaxException("Expected Expression, but found " + symbol);
+                    throw new SyntaxException(expExpression, symbol);
                 }
                 return new AssertStatement(toAssert);
             }
@@ -148,7 +153,7 @@ namespace MiniPL.Parser
                 IOperand opr = Operand();
                 if (opr == null)
                 {
-                    throw new SyntaxException("Expected operand, but " + symbol + " was found");
+                    throw new SyntaxException(expOperand, symbol);
                 }
                 return new UnaryExpression(OperatorType.Negation, opr);
             }
@@ -163,7 +168,7 @@ namespace MiniPL.Parser
                 IOperand secondOperand = Operand();
                 if (secondOperand == null)
                 {
-                    throw new SyntaxException("Expected operand, but " + symbol + " was found");
+                    throw new SyntaxException(expOperand, symbol);
                 }
                 return new BinaryExpression(firstOperand, opr, secondOperand);
             }
@@ -207,13 +212,13 @@ namespace MiniPL.Parser
         {
             if (Matches(Symbol.IntegerLiteral))
             {
-                int val = int.Parse(tokens.Current.Value);
+                int val = int.Parse(tokens.Current.Lexeme);
                 tokens.Next();
                 return new IntegerLiteralOperand(val, MiniPLType.Integer);
             }
             if (Matches(Symbol.StringLiteral))
             {
-                string val = tokens.Current.Value;
+                string val = tokens.Current.Lexeme;
                 tokens.Next();
                 return new StringLiteralOperand(val, MiniPLType.String);
             }
@@ -227,7 +232,7 @@ namespace MiniPL.Parser
                 IExpression expr = Expression();
                 if (expr == null)
                 {
-                    throw new SyntaxException("Expected expression, found " + symbol);
+                    throw new SyntaxException(expExpression, symbol);
                 }
                 Require(Symbol.ClosureClose);
                 return new ExpressionOperand(expr);
@@ -239,7 +244,7 @@ namespace MiniPL.Parser
         {
             if (Matches(Symbol.Identifier))
             {
-                VariableIdentifier id = new VariableIdentifier(tokens.Current.Value);
+                VariableIdentifier id = new VariableIdentifier(tokens.Current.Lexeme);
                 tokens.Next();
                 return id;
             }
@@ -268,7 +273,7 @@ namespace MiniPL.Parser
 
         private bool Accept(Symbol Accepted)
         {
-            if (symbol == Accepted)
+            if (Matches(Accepted))
             {
                 tokens.Next();
                 return true;
@@ -281,13 +286,12 @@ namespace MiniPL.Parser
             return symbol == Expected;
         }
 
-        private bool Require(Symbol Expected)
+        private void Require(Symbol Expected)
         {
             if (!Accept(Expected))
             {
-                throw new SyntaxException("Expected " + Expected + ", but " + symbol + " was found");
+                throw new SyntaxException(Expected.ToString(), symbol);
             }
-            return true;
         }
     }
 }

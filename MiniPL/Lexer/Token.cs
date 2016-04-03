@@ -3,11 +3,11 @@
     public sealed class Token
     {
         public Symbol Symbol { get; }
-        public string Value { get; }
+        public string Lexeme { get; }
 
-        public Token(string Value, Symbol Symbol)
+        public Token(string Lexeme, Symbol Symbol)
         {
-            this.Value = Value;
+            this.Lexeme = Lexeme;
             this.Symbol = Symbol;
         }
     }

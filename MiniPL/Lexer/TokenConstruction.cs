@@ -42,40 +42,14 @@ namespace MiniPL.Lexer
 
         private string TokenText(Symbol ID)
         {
-            switch (ID)
+            if (ID == Symbol.IntegerLiteral || ID == Symbol.StringLiteral || ID == Symbol.Identifier)
             {
-                case Symbol.Variable:
-                    curr.Clear();
-                    return "var";
-                case Symbol.Addition:
-                    return "+";
-                case Symbol.Multiplication:
-                    return "*";
-                case Symbol.Assigment:
-                    return ":=";
-                case Symbol.Colon:
-                    return ":";
-                case Symbol.ClosureClose:
-                    return ")";
-                case Symbol.ClosureOpen:
-                    return "(";
-                case Symbol.SemiColon:
-                    return ";";
-                case Symbol.EndOfInput:
-                    return "EndOfInput";
-                case Symbol.IntegerType:
-                    curr.Clear();
-                    return "int";
-                case Symbol.PrintProcedure:
-                    curr.Clear();
-                    return "PrintProcedure";
-                case Symbol.IntegerLiteral:
-                case Symbol.Identifier:
-                default:
-                    string text = curr.ToString();
-                    curr.Clear();
-                    return text;
+                string text = curr.ToString();
+                curr.Clear();
+                return text;
             }
+            curr.Clear();
+            return ID.ToString();
         }
     }
 }
