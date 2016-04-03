@@ -1,5 +1,6 @@
 ﻿using MiniPL.Parser.AST;
 using MiniPL.Lexer;
+using System;
 
 namespace MiniPL.Parser
 {
@@ -161,9 +162,9 @@ namespace MiniPL.Parser
             if (firstOperand != null)
             {
                 OperatorType opr = ReadOperator();
-                if (opr == OperatorType.None || opr == OperatorType.Negation)
+                if (opr == OperatorType.None)
                 {
-                    return new UnaryExpression(opr, firstOperand);
+                    return new UnaryExpression(OperatorType.None, firstOperand);
                 }
                 IOperand secondOperand = Operand();
                 if (secondOperand == null)
@@ -212,15 +213,22 @@ namespace MiniPL.Parser
         {
             if (Matches(Symbol.IntegerLiteral))
             {
-                int val = int.Parse(tokens.Current.Lexeme);
-                tokens.Next();
-                return new IntegerLiteralOperand(val, MiniPLType.Integer);
+                try
+                {
+                    int val = int.Parse(tokens.Current.Lexeme);
+                    tokens.Next();
+                    return new IntegerLiteralOperand(val);
+                }
+                catch(OverflowException)
+                {
+                    throw new IntegerParseOverflowException(tokens.Current.Lexeme);
+                }
             }
             if (Matches(Symbol.StringLiteral))
             {
                 string val = tokens.Current.Lexeme;
                 tokens.Next();
-                return new StringLiteralOperand(val, MiniPLType.String);
+                return new StringLiteralOperand(val);
             }
             VariableIdentifier varIdent = Identifier();
             if (varIdent != null)

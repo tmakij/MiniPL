@@ -28,6 +28,7 @@ namespace MiniPL.Lexer
             string res = TokenText(ID);
             Token t = new Token(res, ID);
             tokens.Add(t);
+            /*
             string dbg;
             if (ID == Symbol.IntegerLiteral || ID == Symbol.Identifier)
             {
@@ -38,6 +39,7 @@ namespace MiniPL.Lexer
                 dbg = ID.ToString();
             }
             System.Console.WriteLine("Read token: " + dbg);
+            */
         }
 
         private string TokenText(Symbol ID)

@@ -3,12 +3,10 @@
     public sealed class StringLiteralOperand : IOperand
     {
         private readonly string literal;
-        private readonly MiniPLType type;
 
-        public StringLiteralOperand(string Literal, MiniPLType Type)
+        public StringLiteralOperand(string Literal)
         {
             literal = Literal;
-            type = Type;
         }
 
         public void CheckIdentifiers(UsedIdentifiers Used)
@@ -17,12 +15,12 @@
 
         public MiniPLType NodeType(IdentifierTypes Types)
         {
-            return type;
+            return MiniPLType.String;
         }
 
         public ReturnValue Execute(Variables Global)
         {
-            return new ReturnValue(type, literal);
+            return new ReturnValue(MiniPLType.String, literal);
         }
     }
 }
